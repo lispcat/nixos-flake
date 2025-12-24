@@ -33,6 +33,7 @@
 
     # wayland
     hyprland.enable = true;
+    river.enable = true;
 
     # zsh
     zsh.enable = true;
