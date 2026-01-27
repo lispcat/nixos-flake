@@ -66,7 +66,7 @@ in {
         cardinal # foss VCV-rack (only self-contained modules)
         dexed
         ams
-        bristol
+        # bristol
         vital
 
         ## yabridge setup
@@ -78,7 +78,7 @@ in {
         ## Daws
         reaper
         audacity
-        # bitwig-studio # proprietary!!!
+        bitwig-studio # proprietary!!!
         sunvox
 
         ## Tools

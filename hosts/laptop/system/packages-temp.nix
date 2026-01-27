@@ -90,8 +90,16 @@ in {
     hyprland-per-window-layout
     networkmanagerapplet
     pavucontrol
-    xfce.thunar
-    nicotine-plus
+    thunar
+    # nicotine-plus
+    # proxychains-ng
+    projectm_3
+
+    # TODO: integrate docker-compose file into nixos config using sops.
+    (writeShellScriptBin "nicotine" ''
+      #!${runtimeShell}
+      exec proxychains4 ${nicotine-plus}/bin/nicotine "$@"
+    '')
 
     ### Dev/Scripts #################################################
 
@@ -126,6 +134,8 @@ in {
     nix-output-monitor
     # vulnix
     nix-diff
+    xlsfonts
+    fontconfig
 
     ### Applications ################################################
 
@@ -142,7 +152,7 @@ in {
     libreoffice-fresh hunspell hunspellDicts.en-us-large
     obs-studio
     vesktop
-    mtpaint
+    # pkgs-stable.mtpaint
     anki
     signal-desktop
     milkytracker
@@ -163,6 +173,7 @@ in {
       };
     }))
     wireshark
+    prismlauncher
 
   ];
 
@@ -179,6 +190,12 @@ in {
     # bitmap
     tamzen
     uw-ttyp0
+    # efont-unicode ; sizing mid
+    unifont
+    profont
+    nerd-fonts.profont
+    # envypn-font ; tiny
+    # zpix-pixel-font ; bdf, can't use?
 
     # variable
     vollkorn

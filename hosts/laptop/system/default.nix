@@ -21,4 +21,19 @@
   ## Temp
   programs.wireshark.enable = true;
 
+  programs.proxychains = {
+    enable = true;
+    proxyDNS = true;
+    chain.type = "strict";
+    proxies = {
+      # We'll give our proxy a logical name, "localvpn".
+      localvpn = {
+        enable = true;
+        type = "socks5";
+        host = "127.0.0.1";
+        port = 1080;
+      };
+    };
+  };
+
 }

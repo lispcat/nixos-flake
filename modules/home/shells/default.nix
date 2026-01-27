@@ -21,43 +21,27 @@
           EDITOR = "emacsclient";
           VISUAL = "emacsclient";
 
-          # XDG_CURRENT_DESKTOP = "river";
-          XDG_CURRENT_DESKTOP = "Hyprland";
-          XDG_SESSION_TYPE = "wayland";
-
-          ANKI_WAYLAND = "1";
-          # CLUTTER_BACKEND = "wayland";
-          # ECORE_EVAS_ENGINE = "wayland";
-          # ELM_ENGINE = "wayland";
-          GDK_BACKEND = "wayland";
-          MOZ_ENABLE_WAYLAND = "1";
-          NIXOS_OZONE_WL = "1";  # enable native wayland on chromium/electron
-          QT_QPA_PLATFORM = "wayland";
-          SDL_VIDEODRIVER = "wayland";
-
-          WLR_BACKEND = "vulkan";
-          WLR_RENDERER = "vulkan";
-
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-
-          RTC_USE_PIPEWIRE = "true";
-          # WLR_NO_HARDWARE_CURSORS = "1";
-          # WLR_DRM_NO_ATOMIC = "1";
-          # QT_STYLE_OVERRIDE = "kvantum";
-
-          # WAYLAND_DEBUG = "1";
-
-          ## Fcitx input related
-          GLFW_IM_MODULE = "fcitx";
-          XMODIFIERS = "@im=fcitx";
-          GTK_IM_MODULE = "";
-          # GTK_IM_MODULE = "fcitx";
-          # GTK_IM_MODULE = "wayland";
-
-          QT_IM_MODULE = "fcitx";
-          QT_IM_MODULES = "fcitx;wayland;ibus";
-
           LSP_USE_PLISTS = "true"; # emacs lsp-booster
+
+          ### --- WAYLAND --- ###
+
+          # -- app-specific --
+          NIXOS_OZONE_WL = "1"; # enable native wayland on chromium/electron
+          ANKI_WAYLAND = "1"; # anki wayland
+          MOZ_ENABLE_WAYLAND = "1"; # firefox wayland
+
+          # -- Toolkit backends (with fallbacks) --
+          QT_QPA_PLATFORM = "wayland;xcb"; # Qt backend
+          GDK_BACKEND = "wayland,x11,*"; # GTK backend
+
+          # -- WM fixes --
+          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1"; # prevent title bars/borders
+
+          # -- Input method --
+          ## Fcitx input related
+          XMODIFIERS = "@im=fcitx";
+          QT_IM_MODULES = "wayland;fcitx;ibus";
+          GLFW_IM_MODULE = "fcitx";
         };
 
         shellAliases = {
@@ -83,6 +67,10 @@
           # completion
           autoload -U compinit; compinit
           zstyle ':completion:*' menu select
+
+          # emacs eat intergration
+          [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+            source "$EAT_SHELL_INTEGRATION_DIR/zsh"
         '';
       };
     })

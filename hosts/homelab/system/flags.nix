@@ -10,8 +10,6 @@
     ## Applications
     virtualization.enable = false;
     flatpak.enable = false;
-    gtk-portal.enable = false;
-    wlr-portal.enable = false;
     ## Firejail
     firejail.enable = true;
     ## Games
@@ -28,6 +26,7 @@
     renoise.enable = false;
     ## Wayland
     hyprland.enable = true;
+    river.enable = true;
     ## Zsh
     zsh.enable = true;
   };

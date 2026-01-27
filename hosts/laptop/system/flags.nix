@@ -8,8 +8,6 @@
     # applications
     virtualization.enable = true;
     flatpak.enable = false;
-    gtk-portal.enable = false;
-    wlr-portal.enable = false;
 
     # firejail
     firejail.enable = true;
@@ -33,6 +31,8 @@
 
     # wayland
     hyprland.enable = true;
+    # hyprland.enable = false;
+    # river.enable = false;
     river.enable = true;
 
     # zsh

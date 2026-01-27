@@ -1,4 +1,4 @@
-{ user, mkFeature, ... }:
+{ pkgs, user, mkFeature, ... }:
 
 {
   imports = [
@@ -51,6 +51,9 @@
       ## Networking ########################################
 
       networking.networkmanager.enable = true;
+      networking.networkmanager.plugins = with pkgs; [
+        networkmanager-openvpn
+      ];
 
       ## Audio #############################################
 

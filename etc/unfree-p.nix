@@ -8,6 +8,8 @@ let
     "vcv-rack"
     "rave-generator-2"
     "sunvox"
+    "bitwig-studio"
+    "bitwig-studio-unwrapped"
 
     # games
     "steam"
@@ -15,6 +17,9 @@ let
     "steam-unwrapped"
     "steam-run"
     "osu-lazer-bin"
+
+    # other
+    "zpix-pixel-font"
   ];
   unfree-predicate = nixpkgs: pkg:
     builtins.elem (nixpkgs.lib.getName pkg) unfree-pkgs;
