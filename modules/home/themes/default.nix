@@ -37,13 +37,49 @@
       gtk.gtk2.extraConfig = ''
         gtk-im-module=\"fcitx\"
       '';
-      gtk.gtk3.extraConfig = {
-        gtk-dialogs-use-header = false;
-        gtk-im-module = "fcitx";    # fcitx
+      gtk.gtk3 = {
+        extraConfig = {
+          gtk-dialogs-use-header = false;
+          gtk-im-module = "fcitx";    # fcitx
+        };
+        extraCss = ''
+          /* River GTK headerbar hack: */
+
+          /* No (default) title bar on wayland */
+          headerbar.default-decoration {
+            /* You may need to tweak these values depending on your GTK theme */
+            margin-bottom: 50px;
+            margin-top: -100px;
+          }
+
+          /* rm -rf window shadows */
+          window.csd,             /* gtk4? */
+          window.csd decoration { /* gtk3 */
+            box-shadow: none;
+          }
+        '';
       };
-      gtk.gtk4.extraConfig = {
-        gtk-dialogs-use-header = false;
-        # gtk-im-module = "fcitx";    # fcitx
+      gtk.gtk4 = {
+        extraConfig = {
+          gtk-dialogs-use-header = false;
+          # gtk-im-module = "fcitx";    # fcitx
+        };
+        extraCss = ''
+          /* River GTK headerbar hack: */
+
+          /* No (default) title bar on wayland */
+          headerbar.default-decoration {
+            /* You may need to tweak these values depending on your GTK theme */
+            margin-bottom: 50px;
+            margin-top: -100px;
+          }
+
+          /* rm -rf window shadows */
+          window.csd,             /* gtk4? */
+          window.csd decoration { /* gtk3 */
+            box-shadow: none;
+          }
+        '';
       };
     })
   ];

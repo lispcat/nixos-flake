@@ -136,15 +136,21 @@ in {
     nix-diff
     xlsfonts
     fontconfig
+    clojure
+    babashka
+    leiningen
 
     ### Applications ################################################
 
     firefox
-    librewolf
+    pkgs-stable.librewolf
     gimp
     keepassxc
     krita
     river-classic
+    wideriver
+    sandbar
+    lswt
     # river
     calibre
     ungoogled-chromium

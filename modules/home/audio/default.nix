@@ -4,7 +4,6 @@
   imports = [
     (mkFeature "mpd" "Enable mpd service" {
       home.packages = with pkgs; [ mpc ];
-
       services = {
         # use 'systemctl --user' to interact
         mpd = {
@@ -23,12 +22,22 @@
             }
           '';
         };
-
         mpdris2 = {
           enable = true;
           multimediaKeys = true;
           notifications = true;
         };
+        # mpdscribble = {
+        #   enable = true;
+        #   endpoints = {
+        #     "last.fm" = {
+        #       username = "window010101";
+        #       # TODO: requires SOPS (is pretty easy)
+        #       # https://github.com/Serpentian/AlfheimOS/blob/master/system/security/sops.nix
+        #       # passwordFile = "/run/secrets/lastfm";
+        #     };
+        #   };
+        # };
       };
     })
     (mkFeature "pro-audio" "Setup for music production" {
@@ -42,6 +51,10 @@
           vst2_location = 'centralized'
           no_verify = false
           blacklist = []
+
+          [vst2]
+          editor_force_dnd = false
+          editor_disable_host_scaling = true
         '';
       };
     })
