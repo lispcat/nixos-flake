@@ -20,6 +20,12 @@
 
     # LSP server to visualize ownership and lifetimes in Rust.
     rustowl-flake.url = "github:nix-community/rustowl-flake";
+
+    # SMAPI stardew valley modding
+    stardew-modding = {
+      url = "github:Distracted-E421/stardew-modding-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   ## Outputs:

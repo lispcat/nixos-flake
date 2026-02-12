@@ -19,7 +19,7 @@
       services.xserver.xkb = {
         layout = "us";
         variant = "dvp";
-        options = "ctrl:nocaps";  # different for wayland comp
+        options = "ctrl:nocaps,grp:menu_toggle";  # different for wayland comp
       };
       console = {
         useXkbConfig = true;

@@ -29,11 +29,18 @@
     # renoise
     renoise.enable = true;
 
+    # desktop
+    greetd.enable = true;
+
     # wayland
-    hyprland.enable = true;
-    # hyprland.enable = false;
+    # hyprland.enable = true;
+    hyprland.enable = false;
     # river.enable = false;
     river.enable = true;
+
+    # xorg
+    xorg.enable = true;
+    xmonad.enable = true;
 
     # zsh
     zsh.enable = true;

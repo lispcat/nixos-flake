@@ -101,6 +101,9 @@ in {
       exec proxychains4 ${nicotine-plus}/bin/nicotine "$@"
     '')
 
+    xmonad-with-packages
+    sxhkd
+
     ### Dev/Scripts #################################################
 
     gcc
@@ -139,6 +142,8 @@ in {
     clojure
     babashka
     leiningen
+    python3
+    essentia-extractor
 
     ### Applications ################################################
 

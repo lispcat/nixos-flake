@@ -16,5 +16,6 @@
     ./renoise
     ./shells
     ./wayland
+    ./xorg
   ];
 }

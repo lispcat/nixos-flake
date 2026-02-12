@@ -12,6 +12,7 @@
     ./shells
     ./themes
     ./xkb
+    ./games
   ];
 
   home = {
@@ -20,4 +21,5 @@
     # Don't touch!
     stateVersion = "24.05";
   };
+
 }

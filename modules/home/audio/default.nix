@@ -52,9 +52,10 @@
           no_verify = false
           blacklist = []
 
-          [vst2]
-          editor_force_dnd = false
-          editor_disable_host_scaling = true
+          # [vst2]
+          # editor_force_dnd = false
+          # editor_disable_host_scaling = true
+          # editor_double_embed = true
         '';
       };
     })
