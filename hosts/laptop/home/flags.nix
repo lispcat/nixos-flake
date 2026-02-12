@@ -27,5 +27,8 @@
 
     # xkb
     fcitx.enable = true;
+
+    # games
+    smapi.enable = true;
   };
 }
