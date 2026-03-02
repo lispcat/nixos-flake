@@ -4,8 +4,22 @@
   imports = [
 
     (mkFeature "xorg" "Enable xorg" {
-      services.xserver.enable = true;
-      services.xserver.displayManager.startx.enable = true;
+      services.xserver = {
+        enable = true;
+        displayManager.startx.enable = true;
+      };
+      services.libinput = {
+        enable = true;
+        touchpad = {
+          naturalScrolling = true;
+          disableWhileTyping = true;
+          tappingDragLock = false;
+        };
+      };
+      services.touchegg.enable = true;
+      # environment.systemPackages = with pkgs; [
+      #   libinput-gestures xdotool wmctrl
+      # ];
     })
 
     (mkFeature "xmonad" "Enable xmonad" {

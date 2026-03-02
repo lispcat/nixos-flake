@@ -69,13 +69,13 @@ in {
         ## yabridge setup
         yabridge
         yabridgectl
-        wineWowPackages.stable
+        wineWow64Packages.stable
         winetricks
 
         ## Daws
         reaper
         audacity
-        bitwig-studio # proprietary!!!
+        # bitwig-studio # proprietary!!!
         sunvox
 
         ## Tools
@@ -86,8 +86,8 @@ in {
 
         ## VSTs
         fire               # multi-band distortion
-        metersLv2    # volume analyzer (Lv2 format...)
-        guitarix     # distortion pedals (jack only?)
+        meters-lv2    # volume analyzer (Lv2 format...)
+        # guitarix     # distortion pedals (jack only?)
         chow-kick     # classic drum generator
         # chow-phaser   # phaser
         stone-phaser  # better phaser

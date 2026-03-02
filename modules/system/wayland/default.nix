@@ -36,11 +36,7 @@
       };
 
       xdg.portal = {
-        enable = true;
         wlr.enable = true; # enables wlr portal
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-gtk
-        ];
       };
 
       services.displayManager = let
@@ -78,11 +74,6 @@
       programs.hyprland = {
         enable = true;
         xwayland.enable = true;
-      };
-      # portals (no need for wlr, hyprland come with special)
-      xdg.portal = {
-        enable = true;
-        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
       };
       # services.greetd = {
       #   enable = true;

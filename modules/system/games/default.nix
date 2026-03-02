@@ -15,6 +15,9 @@
         extest.enable = true;
         localNetworkGameTransfers.openFirewall = false;
       };
+
+
+
       environment.etc = {
         "firejail/steam.profile".source = ./files/steam.profile;
       };
@@ -28,6 +31,8 @@
         # profile = "/etc/firejail/steam.profile";
         profile = "${pkgs.firejail}/etc/firejail/steam.profile";
       };
+
+
 
       ## Osu-Lazer #############################################
 

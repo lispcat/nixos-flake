@@ -1,4 +1,4 @@
-{ pkgs, user, mkFeature, ... }:
+{ inputs, pkgs, user, mkFeature, ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
         users.${user} = {
           isNormalUser = true;
           description = "${user}";
-          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" ];
+          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" "input" ];
         };
       };
 
@@ -68,6 +68,16 @@
 
       security.rtkit.enable = true;
 
+      ## Applications ######################################
+
+      xdg.portal = {
+        enable = true;
+        extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+        config.common = {
+          default = [ "gtk" ];
+        };
+      };
+
       ## Linux #############################################
 
       # polkit (dont really know what this does)
@@ -100,5 +110,9 @@
           options = "--delete-older-than 7d";
         };
       };
+
+      ## Misc ##############################################
+
+      programs.dconf.enable = true;
     })
   ]; }

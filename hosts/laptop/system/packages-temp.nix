@@ -1,7 +1,8 @@
 { pkgs, pkgs-stable, ... }:
 
 let
-  base-emacs = pkgs.emacs30-pgtk;
+  # base-emacs = pkgs.emacs30-pgtk;
+  base-emacs = pkgs.emacs30-gtk3;
   emacs-with-pkgs =
     (pkgs.emacsPackagesFor base-emacs).emacsWithPackages (epkgs: [
       epkgs.vterm
@@ -101,8 +102,22 @@ in {
       exec proxychains4 ${nicotine-plus}/bin/nicotine "$@"
     '')
 
-    xmonad-with-packages
-    sxhkd
+    ### Xorg ###
+
+    (haskellPackages.ghcWithPackages (ps: [
+      ps.xmonad ps.xmonad-contrib
+    ]))
+    trayer
+    xmobar
+    xmessage
+    scrot
+    xscreensaver
+    xfce4-power-manager
+    picom
+    dunst
+    xclip
+    dmenu-rs
+    pkgs-stable.kbdd
 
     ### Dev/Scripts #################################################
 
@@ -112,7 +127,7 @@ in {
     # libxkbcommon
     clang-tools
     devenv
-    ghc
+    # ghc
     gnumake
     colordiff
     poppler-utils  # for pdftotext
@@ -157,12 +172,14 @@ in {
     sandbar
     lswt
     # river
-    calibre
+    pkgs-stable.calibre
     ungoogled-chromium
     kdePackages.kdeconnect-kde
     libreoffice-fresh hunspell hunspellDicts.en-us-large
     obs-studio
     vesktop
+    # nheko
+    element-desktop
     # pkgs-stable.mtpaint
     anki
     signal-desktop

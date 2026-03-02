@@ -26,22 +26,25 @@
           ### --- WAYLAND --- ###
 
           # -- app-specific --
-          NIXOS_OZONE_WL = "1"; # enable native wayland on chromium/electron
-          ANKI_WAYLAND = "1"; # anki wayland
-          MOZ_ENABLE_WAYLAND = "1"; # firefox wayland
+          # NIXOS_OZONE_WL = "1"; # enable native wayland on chromium/electron
+          # ANKI_WAYLAND = "1"; # anki wayland
+          # MOZ_ENABLE_WAYLAND = "1"; # firefox wayland
 
           # -- Toolkit backends (with fallbacks) --
-          QT_QPA_PLATFORM = "wayland;xcb"; # Qt backend
-          GDK_BACKEND = "wayland,x11,*"; # GTK backend
+          # QT_QPA_PLATFORM = "wayland;xcb"; # Qt backend
+          # GDK_BACKEND = "wayland,x11,*"; # GTK backend
 
           # -- WM fixes --
-          QT_WAYLAND_DISABLE_WINDOWDECORATION = "1"; # prevent title bars/borders
+          # QT_WAYLAND_DISABLE_WINDOWDECORATION = "1"; # prevent title bars/borders
 
           # -- Input method --
           ## Fcitx input related
-          XMODIFIERS = "@im=fcitx";
-          QT_IM_MODULES = "wayland;fcitx;ibus";
-          GLFW_IM_MODULE = "fcitx";
+          # XMODIFIERS = "@im=fcitx";
+          # QT_IM_MODULES = "wayland;fcitx;ibus";
+          # GLFW_IM_MODULE = "fcitx";
+
+          #### --- Xorg --- ####
+          MOZ_USE_XINPUT2 = 1;
         };
 
         shellAliases = {

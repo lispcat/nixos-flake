@@ -26,6 +26,9 @@
       url = "github:Distracted-E421/stardew-modding-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # declarative flatpaks
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
   };
 
   ## Outputs:

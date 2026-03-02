@@ -1,7 +1,25 @@
-{ config, pkgs, user, mkFeature, ... }:
+{ inputs, pkgs, user, mkFeature, ... }:
 
 {
   imports = [
+    inputs.nix-flatpak.nixosModules.nix-flatpak
+
+    (mkFeature "flatpak" "Enables flatpak" {
+      services.flatpak = {
+        enable = true;
+        packages = [
+          "com.github.joseexposito.touche"
+        ];
+      };
+      # systemd.services.flatpak-repo = {
+      #   wantedBy = [ "multi-user.target" ];
+      #   path = [ pkgs.flatpak ];
+      #   script = ''
+      #     flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      #   '';
+      # };
+    })
+
     (mkFeature "virtualization" "Enables virtualization" {
       virtualisation.libvirtd = {
         enable = true;
@@ -18,16 +36,6 @@
         docker-compose
       ];
 
-    })
-    (mkFeature "flatpak" "Enables flatpak" {
-      services.flatpak.enable = true;
-      systemd.services.flatpak-repo = {
-        wantedBy = [ "multi-user.target" ];
-        path = [ pkgs.flatpak ];
-        script = ''
-          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-        '';
-      };
     })
   ];
 }

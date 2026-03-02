@@ -7,7 +7,8 @@
 
     # applications
     virtualization.enable = true;
-    flatpak.enable = false;
+    # flatpak.enable = false;
+    flatpak.enable = true;
 
     # firejail
     firejail.enable = true;
@@ -35,8 +36,8 @@
     # wayland
     # hyprland.enable = true;
     hyprland.enable = false;
-    # river.enable = false;
-    river.enable = true;
+    river.enable = false;
+    # river.enable = true;
 
     # xorg
     xorg.enable = true;

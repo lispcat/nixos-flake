@@ -7,7 +7,7 @@
     pro-audio.enable = true;
 
     # cron
-    cron-hyprpaper.enable = true;
+    cron-hyprpaper.enable = false;
     cron-low-bat.enable = true;
 
     # dev
