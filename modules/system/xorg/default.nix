@@ -20,6 +20,8 @@
       # environment.systemPackages = with pkgs; [
       #   libinput-gestures xdotool wmctrl
       # ];
+      # enable bitmap fonts on xorg
+      fonts.fontDir.enable = true;
     })
 
     (mkFeature "xmonad" "Enable xmonad" {

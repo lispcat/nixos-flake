@@ -4,86 +4,122 @@
   imports = [
     (mkFeature "app-theme-def" "Enables qt and gtk (def variant)" {
 
-      ## QT
+      ## QT ## ---------------------------------------------
 
+      # https://github.com/raexera/yuki/blob/main/home/raexera/config/qt.nix
       qt = {
         enable = true;
-        platformTheme.name = "Adwaita-dark";
-        style = {
-          name = "Adwaita-dark";
-          package = pkgs.adwaita-qt;
-        };
+        platformTheme = "qtct";
+        style.name = "kvantum";
       };
 
-      ## GTK
+      # qtTheme = {
+      #   name = "Catppuccin-Mocha-Mauve";
+      #   package = pkgs.catppuccin-kvantum.override {
+      #     variant = "Mocha";
+      #     accent = "Mauve";
+      #   };
+      # };
+
+
+      ## GTK ## --------------------------------------------
 
       gtk = {
         enable = true;
         iconTheme = {
-          name = "Kanagawa";
-          package = pkgs.kanagawa-icon-theme;
+          package = pkgs.papirus-icon-theme;
+          name = "Papirus-Dark";
         };
+
         theme = {
-          name = "vimix-dark-compact-amethyst";
-          package = pkgs.vimix-gtk-themes.override {
-            colorVariants = [ "dark" ];
-            sizeVariants =  [ "compact" ];
-            themeVariants = [ "amethyst" ];
-            # tweaks = [ "flat" ];
-          };
+          package = pkgs.colloid-gtk-theme;
+          name = "Colloid-Dark";
+
+          # name = "Catppuccin-Mocha-Compact-Mauve-Dark";
+          # package = pkgs.catppuccin-gtk.override {
+          #   accents = [ "mauve" ];
+          #   size = "compact";
+          #   variant = "mocha";
+          #   # tweaks = [ "rimless" ];
+          # };
+          
         };
-      };
 
-      gtk.gtk2.extraConfig = ''
-        gtk-im-module=\"fcitx\"
-      '';
-      gtk.gtk3 = {
-        extraConfig = {
-          gtk-dialogs-use-header = false;
-          gtk-im-module = "fcitx";    # fcitx
-        };
-        extraCss = ''
-          /* River GTK headerbar hack: */
-
-          /* No (default) title bar on wayland */
-          headerbar.default-decoration {
-            /* You may need to tweak these values depending on your GTK theme */
-            margin-bottom: 50px;
-            margin-top: -100px;
-          }
-
-          /* rm -rf window shadows */
-          window.csd,             /* gtk4? */
-          window.csd decoration { /* gtk3 */
-            box-shadow: none;
-          }
+        gtk2.extraConfig = ''
+          gtk-im-module="fcitx"
         '';
-      };
-      gtk.gtk4 = {
-        extraConfig = {
-          gtk-dialogs-use-header = false;
-          # gtk-im-module = "fcitx";    # fcitx
+
+        gtk3 = {
+          extraConfig.gtk-application-prefer-dark-theme = true;
+          extraConfig.gtk-im-module = "fcitx";    # fcitx
+
+          ## GTK headerbar ## --------------------
+          extraConfig.gtk-dialogs-use-header = false;
+          extraCss = ''
+            /*** River GTK headerbar hack: ***/
+
+            /* No (default) title bar on wayland */
+            headerbar.default-decoration {
+              /* You may need to tweak these values depending on your GTK theme */
+              margin-bottom: 50px;
+              margin-top: -100px;
+            }
+
+            /* rm -rf window shadows */
+            window.csd,             /* gtk4? */
+            window.csd decoration { /* gtk3 */
+              box-shadow: none;
+            }
+          '';
         };
-        extraCss = ''
-          /* River GTK headerbar hack: */
 
-          /* No (default) title bar on wayland */
-          headerbar.default-decoration {
-            /* You may need to tweak these values depending on your GTK theme */
-            margin-bottom: 50px;
-            margin-top: -100px;
-          }
+        gtk4 = {
+          extraConfig.gtk-application-prefer-dark-theme = true;
+          extraConfig.gtk-im-module = "fcitx";    # fcitx
 
-          /* rm -rf window shadows */
-          window.csd,             /* gtk4? */
-          window.csd decoration { /* gtk3 */
-            box-shadow: none;
-          }
-        '';
+          ## GTK headerbar ## --------------------
+          extraConfig.gtk-dialogs-use-header = false;
+          extraCss = ''
+            /* River GTK headerbar hack: */
+  
+            /* No (default) title bar on wayland */
+            headerbar.default-decoration {
+              /* You may need to tweak these values depending on your GTK theme */
+              margin-bottom: 50px;
+              margin-top: -100px;
+            }
+  
+            /* rm -rf window shadows */
+            window.csd,             /* gtk4? */
+            window.csd decoration { /* gtk3 */
+              box-shadow: none;
+            }
+          '';
+        };
       };
+      dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
     })
   ];
 }
+
+  ## Old
+
+  # gtk = {
+  #   enable = true;
+  #   iconTheme = {
+  #     name = "Kanagawa";
+  #     package = pkgs.kanagawa-icon-theme;
+  #   };
+  #   theme = {
+  #     name = "vimix-dark-compact-amethyst";
+  #     package = pkgs.vimix-gtk-themes.override {
+  #       colorVariants = [ "dark" ];
+  #       sizeVariants =  [ "compact" ];
+  #       themeVariants = [ "amethyst" ];
+  #       # tweaks = [ "flat" ];
+  #     };
+  #   };
+  # };
 
   # river gtk bar fix
 

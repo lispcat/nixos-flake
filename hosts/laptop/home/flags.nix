@@ -30,5 +30,8 @@
 
     # games
     smapi.enable = true;
+
+    # vpn proxy for p2p
+    vpn-proxy.enable = false;
   };
 }
