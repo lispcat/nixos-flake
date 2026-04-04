@@ -69,5 +69,45 @@
         };
       };
     })
+
+    (mkFeature "sshd" "Enable sshd server" {
+      services.openssh = {
+        enable = true;
+        ports = [ 22 ];
+        settings = {
+          PasswordAuthentication = false;  # disable password login
+          PermitRootLogin = "no";
+          X11Forwarding = false;
+          KbdInteractiveAuthentication = false;  # disables PAM challenge auth
+        };
+      };
+
+      # Open firewall for SSH
+      networking.firewall.allowedTCPPorts = [ 22 ];
+
+      # Add your public key for a user
+      users.users.youruser = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+        openssh.authorizedKeys.keys = [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6gBRMaUl6yaYPhK/haWqtxpw93Iylooq1DL+0nNmtFj7Mhhx+LF0X2BpHWzL2nh98zIvwHTPqG4g7r6NvofjCJkm8bCtXF8V/wj5aZ2RLANbI9Ugb+yOyv+eZ8yQf405hnf2p59fs8yYNK7mq/Io9cFh8QD7bjm+FFbfayVWsu84r1sXQxc+U/OSOqgGDVjT+mEFp/9nbf2T8nkTLCUm1RbKRm7Khp7UKcivC4OzGpSWtktZkk8TKvCuuoAgmfjVdN2fRE5WsWAId9jxW7jGsXhPhqmQdPS4tmqH/OyqcHWT0i4yXSwnn1+8j2OawTj75y4uLq2MSxyK3GUlP9kTH openpgp:0xDDCDF03F"
+        ];
+      };
+
+      # bans IPs after repeated failed attempts
+      services.fail2ban.enable = true;
+    })
+
+    # Note: after enabling, run `sudo tailscale up` to activate (persists).
+    # Connect with `user@homelab-hostname`.
+    # Ensure tailscale is also installed and running on client device.
+    # Get homelab hostname with `tailscale status` on server.
+    # Can also use IP instead of hostname.
+    (mkFeature "tailscale" "Enable tailscale" {
+      services.tailscale.enable = true;
+      networking.firewall.trustedInterfaces = [ "tailscale0" ];
+      # Optionally restrict SSH to tailscale interface only:
+      services.openssh.listenAddresses = [{ addr = "100.x.x.x"; port = 22; }];
+    })
   ];
 }

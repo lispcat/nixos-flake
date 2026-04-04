@@ -29,6 +29,8 @@
     mullvad.enable = false;
     bluetooth.enable = false;
     dns-over-https.enable = true;
+    sshd.enable = true;
+    tailscale.enable = true;
 
     # renoise
     renoise.enable = false;

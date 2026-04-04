@@ -7,7 +7,6 @@
 
     # applications
     virtualization.enable = true;
-    # flatpak.enable = false;
     flatpak.enable = true;
 
     # firejail
@@ -26,6 +25,8 @@
     mullvad.enable = false;
     bluetooth.enable = false;
     dns-over-https.enable = false;
+    sshd.enable = false;
+    tailscale.enable = true;
 
     # renoise
     renoise.enable = true;
