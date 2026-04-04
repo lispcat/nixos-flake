@@ -107,7 +107,8 @@
       services.tailscale.enable = true;
       networking.firewall.trustedInterfaces = [ "tailscale0" ];
       # Optionally restrict SSH to tailscale interface only:
-      services.openssh.listenAddresses = [{ addr = "100.x.x.x"; port = 22; }];
+      # Upd: actually this isnt necessary and causes headaches
+      # services.openssh.listenAddresses = [{ addr = "100.x.x.x"; port = 22; }];
     })
   ];
 }
