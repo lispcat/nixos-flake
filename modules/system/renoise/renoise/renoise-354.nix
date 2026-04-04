@@ -26,7 +26,7 @@ let
   platforms = {
     x86_64-linux = {
       archSuffix = "x86_64";
-      hash = "sha256-b+YXBVnxu54HfC/tWapcs/ZYzwBOJswYbEbEU3SVNss=";
+      hash = "sha256-artZcqN95SxxguB0xUm0qG7c6uwbhJEQrcR9OuLQowk=";
     };
     aarch64-linux = {
       archSuffix = "arm64";

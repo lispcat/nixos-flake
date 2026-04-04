@@ -75,7 +75,7 @@ in {
         ## Daws
         reaper
         audacity
-        # bitwig-studio # proprietary!!!
+        pkgs-stable.bitwig-studio # proprietary!!!
         sunvox
 
         ## Tools

@@ -5,9 +5,11 @@ let
     # name = "rns_344_linux_x86_64.tar.gz";
     # name = "rns_353_linux_x86_64.tar.gz";
     name = "rns_354_linux_x86_64.tar.gz";
-    # Paste hash from `nix hash file <tarball>`.
-    sha256 = "sha256-Kl7iLMDZdpxaodIfW+JdOjgdN7/vUKx4uhWr2bEsECo=";
+
+    ### Paste hash from `nix hash file <tarball>`.
+    # sha256 = "sha256-Kl7iLMDZdpxaodIfW+JdOjgdN7/vUKx4uhWr2bEsECo=";
     # sha256 = "sha256-Sr9UffECVm/E1F5kP4kog0swB22qYedqXNSQFclZiBI=";
+    sha256 = "sha256-artZcqN95SxxguB0xUm0qG7c6uwbhJEQrcR9OuLQowk=";
     message = ''
       Renoise tarball not found in Nix Store.
 

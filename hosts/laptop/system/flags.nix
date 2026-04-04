@@ -47,6 +47,6 @@
     zsh.enable = true;
 
     # vpn proxy for p2p
-    vpn-proxy.enable = true;
+    vpn-proxy.enable = false; # broken, using docker-compose till SOPS
   };
 }

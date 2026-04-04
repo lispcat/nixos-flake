@@ -5,29 +5,51 @@
   # final state of the ENTIRE flake config)
 
   features = {
-    ## Global
+    # global
     global.enable = true;
-    ## Applications
+
+    # applications
     virtualization.enable = false;
     flatpak.enable = false;
-    ## Firejail
+    # flatpak.enable = true;
+
+    # firejail
     firejail.enable = true;
-    ## Games
-    games.enable = true;
-    ## Hardware
+
+    # games
+    games.enable = false;
+
+    # hardware
     laptop-power.enable = false;
-    ## Misc
+
+    # misc
     nix-ld.enable = false;
-    ## Networking
+
+    # networking
     mullvad.enable = false;
     bluetooth.enable = false;
-    dns-over-https.enable = false;
-    ## Renoise
+    dns-over-https.enable = true;
+
+    # renoise
     renoise.enable = false;
-    ## Wayland
-    hyprland.enable = true;
-    river.enable = true;
-    ## Zsh
+
+    # desktop
+    greetd.enable = true;
+
+    # wayland
+    # hyprland.enable = true;
+    hyprland.enable = false;
+    river.enable = false;
+    # river.enable = true;
+
+    # xorg
+    xorg.enable = true;
+    xmonad.enable = false;
+
+    # zsh
     zsh.enable = true;
+
+    # vpn proxy for p2p
+    vpn-proxy.enable = false; # broken, using docker-compose till SOPS
   };
 }

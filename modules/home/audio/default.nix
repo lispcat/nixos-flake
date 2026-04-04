@@ -27,17 +27,22 @@
           multimediaKeys = true;
           notifications = true;
         };
-        # mpdscribble = {
-        #   enable = true;
-        #   endpoints = {
-        #     "last.fm" = {
-        #       username = "window010101";
-        #       # TODO: requires SOPS (is pretty easy)
-        #       # https://github.com/Serpentian/AlfheimOS/blob/master/system/security/sops.nix
-        #       # passwordFile = "/run/secrets/lastfm";
-        #     };
-        #   };
-        # };
+        mpdscribble = {
+          enable = true;
+          endpoints = {
+            "last.fm" = {
+              username = "window010101";
+              # TODO: requires SOPS (is pretty easy)
+              # https://github.com/Serpentian/AlfheimOS/blob/master/system/security/sops.nix
+              # passwordFile = "/run/secrets/lastfm";
+              # workaround
+              passwordFile = "/home/sui/Private/secure/lastfm-pass.txt";
+              # TODO: i should actually set up SOPS, even if i'll have to enter a password for
+              # every rebuild i can just modify the pass cache length. also change the password
+              # to something easier to type.
+            };
+          };
+        };
       };
     })
     (mkFeature "pro-audio" "Setup for music production" {

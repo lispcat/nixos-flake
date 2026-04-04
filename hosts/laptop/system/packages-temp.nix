@@ -66,6 +66,9 @@ in {
 
     ### Desktop #####################################################
 
+    gtk3
+    rofi
+
     mako  # notification daemon
     libnotify  # notify-send
     wlsunset  # color temperature
@@ -118,6 +121,8 @@ in {
     xclip
     dmenu-rs
     pkgs-stable.kbdd
+    rofi
+    xkb-switch
 
     ### Dev/Scripts #################################################
 
@@ -159,6 +164,10 @@ in {
     leiningen
     python3
     essentia-extractor
+
+    ## Cyber
+
+    (cutter.withPlugins (ps: with ps; [jsdec rz-ghidra]))
 
     ### Applications ################################################
 
@@ -202,6 +211,10 @@ in {
     }))
     wireshark
     prismlauncher
+    qbittorrent
+    bottles
+    j4-dmenu-desktop
+    virt-manager
 
   ];
 
@@ -224,6 +237,9 @@ in {
     nerd-fonts.profont
     # envypn-font ; tiny
     # zpix-pixel-font ; bdf, can't use?
+    proggyfonts
+    scientifica
+    terminus_font
 
     # variable
     vollkorn

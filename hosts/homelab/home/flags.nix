@@ -4,11 +4,11 @@
   features = {
     # audio
     mpd.enable = true;
-    pro-audio.enable = true;
+    pro-audio.enable = false;
 
     # cron
     cron-hyprpaper.enable = false;
-    cron-low-bat.enable = true;
+    cron-low-bat.enable = false;
 
     # dev
     git.enable = true;
@@ -26,9 +26,9 @@
     app-theme-def.enable = true;
 
     # xkb
-    fcitx.enable = true;
+    fcitx.enable = false;
 
     # games
-    smapi.enable = true;
+    smapi.enable = false;
   };
 }
