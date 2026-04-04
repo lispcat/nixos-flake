@@ -91,6 +91,7 @@
         extraGroups = [ "wheel" ];
         openssh.authorizedKeys.keys = [
           "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6gBRMaUl6yaYPhK/haWqtxpw93Iylooq1DL+0nNmtFj7Mhhx+LF0X2BpHWzL2nh98zIvwHTPqG4g7r6NvofjCJkm8bCtXF8V/wj5aZ2RLANbI9Ugb+yOyv+eZ8yQf405hnf2p59fs8yYNK7mq/Io9cFh8QD7bjm+FFbfayVWsu84r1sXQxc+U/OSOqgGDVjT+mEFp/9nbf2T8nkTLCUm1RbKRm7Khp7UKcivC4OzGpSWtktZkk8TKvCuuoAgmfjVdN2fRE5WsWAId9jxW7jGsXhPhqmQdPS4tmqH/OyqcHWT0i4yXSwnn1+8j2OawTj75y4uLq2MSxyK3GUlP9kTH openpgp:0xDDCDF03F"
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC4oNjjxB71fgm3NlU9rH6BJQlStA3YF0qvfDO2uFUXXl5SSLbZMGDr4OSjowvFeSby4Rm4xMjOPNSLTjHxncpkW4L+Io3GXzrRPVMWtcwRpRQaNbCOz5Ni7AqGTRii6VpCJfiZ/g/ptMhxPtVQX4K4R1J4QLCUs3MkhHJoccxABGIGAhvsa26ObzCLxeySP7i7aAdAC9xTKDXrSZebznLwX0QiK6zPY6pgvRz7E23wl0XV2J/3YzhtW3uysHwsaupdWfPpvndmOile30hRP2AUB12Prp+g2uqmTbU+OwQIdvRT3yQ+yVxZdgSx30X7fJyc/pYFS5iddy9RWe5dKbj7IC7TRxcp3uM87mWZEOScPMGc48v5R/Bkf1KM2DVqfNhJdep38m1GVEMk+SwOfsq98w/xsGhMdLqAdh+O1cerBmNN65EFNQ59/8BzEqu0RTE/kABDkRrq/aKyjB8iJHWmmdVGeYjhpGvdD8X67t98kC7cxwP/ikjDfz4UOn5Sh9E= openpgp:0x8DF11607"
         ];
       };
 
