@@ -33,7 +33,7 @@
       ];
       services.gpg-agent = {
         enable = true;
-        pinentry.package = pkgs.pinentry-qt;
+        pinentry.package = pkgs.pinentry-tty; # pkgs.pinentry-qt;
         enableSshSupport = true;
         # dont forget to run WM with zsh -l -c 's%'
         enableZshIntegration = true;

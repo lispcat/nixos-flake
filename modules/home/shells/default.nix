@@ -72,7 +72,7 @@
           zstyle ':completion:*' menu select
 
           # emacs eat intergration
-          [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && \
+          [ -n "$EAT_SHELL_INTEGRATION_DIR" ] && [ -f "$EAT_SHELL_INTEGRATION_DIR" ] && \
             source "$EAT_SHELL_INTEGRATION_DIR/zsh"
         '';
       };

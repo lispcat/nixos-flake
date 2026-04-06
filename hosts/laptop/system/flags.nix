@@ -24,7 +24,7 @@
     # networking
     mullvad.enable = false;
     bluetooth.enable = false;
-    dns-over-https.enable = false;
+    dns-over-https.enable = true;
     sshd.enable = false;
     tailscale.enable = true;
 

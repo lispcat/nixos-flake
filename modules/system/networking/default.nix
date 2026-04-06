@@ -39,11 +39,14 @@
         networking.resolvconf.useLocalResolver = true;
         services.resolved = {
           enable = true;
-          dnssec = "false";
-          # dnssec = "true";
-          dnsovertls = "true";
-          domains = [ "~." ];
-          fallbackDns = dns-list;
+
+          settings.Resolve = {
+            DNSOverTLS = "true";
+            DNSSEC = "false";
+            Domains = [ "~." ];
+            FallbackDNS = dns-list;
+          };
+
         };
       }
     )
