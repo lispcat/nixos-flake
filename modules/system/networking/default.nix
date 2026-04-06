@@ -80,7 +80,7 @@
         settings = {
           PasswordAuthentication = false;  # disable password login
           PermitRootLogin = "no";
-          X11Forwarding = false;
+          X11Forwarding = true;
           KbdInteractiveAuthentication = false;  # disables PAM challenge auth
         };
       };
