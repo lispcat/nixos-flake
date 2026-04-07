@@ -121,7 +121,7 @@
           user = "sui";
         };
         "homelab-home" = mkHome {
-          name = "laptop";
+          name = "homelab";
           user = "rin";
         };
       };
