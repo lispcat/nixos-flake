@@ -24,6 +24,6 @@
   # started in user sessions.
   # programs.mtr.enable = true;
 
-  # Don't touch!
-  system.stateVersion = "25.05"; # Did you read the comment?
+  # # Don't touch!
+  # system.stateVersion = "25.05"; # Did you read the comment?
 }

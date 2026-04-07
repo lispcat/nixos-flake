@@ -3,7 +3,8 @@
 
   features = {
     # audio
-    mpd.enable = true;
+    # mpd.enable = true;
+    mpd.enable = false;
     pro-audio.enable = false;
 
     # cron

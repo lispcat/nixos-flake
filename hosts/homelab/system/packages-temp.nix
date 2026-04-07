@@ -29,6 +29,7 @@
     ripgrep
     tldr
     cmake
+    gnumake
     # findutils
 
     ### Applications ###

@@ -36,7 +36,7 @@
     renoise.enable = false;
 
     # desktop
-    greetd.enable = true;
+    greetd.enable = false;
 
     # wayland
     # hyprland.enable = true;
@@ -45,7 +45,7 @@
     # river.enable = true;
 
     # xorg
-    xorg.enable = true;
+    xorg.enable = false;
     xmonad.enable = false;
 
     # zsh
