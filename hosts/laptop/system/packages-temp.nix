@@ -68,36 +68,24 @@ in {
 
     gtk3
     rofi
-
     mako  # notification daemon
     libnotify  # notify-send
-    wlsunset  # color temperature
-    sway-contrib.grimshot  # screenshot
-    bemenu  # dmenu replacement
-    wbg  # minimal wallpaper daemon
-    wl-clipboard-rs  # cli clipboard access
-    # wmenu
     alsa-utils  # provides amixer, aplay
     brightnessctl
     playerctl
     wlr-which-key # which-key functionality
-    swaylock
-    swayidle
-    lswt
-    xwayland
-    waylock
-    fuzzel      # app launcher
-    waybar      # taskbar
-    hyprpaper    # wallpapers
-    hyprpicker   # color-picker
     kooha
-    hyprland-per-window-layout
     networkmanagerapplet
     pavucontrol
     thunar
+    # showmethekey
     # nicotine-plus
     # proxychains-ng
     projectm_3
+    (retroarch.withCores (cores: with cores; [
+      melonds
+      desmume
+    ]))
 
     # TODO: integrate docker-compose file into nixos config using sops.
     (writeShellScriptBin "nicotine" ''
@@ -107,22 +95,7 @@ in {
 
     ### Xorg ###
 
-    (haskellPackages.ghcWithPackages (ps: [
-      ps.xmonad ps.xmonad-contrib
-    ]))
-    trayer
-    xmobar
-    xmessage
-    scrot
-    xscreensaver
-    xfce4-power-manager
-    picom
-    dunst
-    xclip
-    dmenu-rs
-    pkgs-stable.kbdd
-    rofi
-    xkb-switch
+    # (migrated)
 
     ### Dev/Scripts #################################################
 
@@ -176,11 +149,6 @@ in {
     gimp
     keepassxc
     krita
-    river-classic
-    wideriver
-    sandbar
-    lswt
-    # river
     pkgs-stable.calibre
     ungoogled-chromium
     kdePackages.kdeconnect-kde
@@ -200,15 +168,16 @@ in {
     kdePackages.kdenlive
     ani-cli
     # temp fix for mixxx till 2.6
-    (mixxx.overrideAttrs (oldAttrs: {
-      version = "2.5-bleeding";
-      src = fetchFromGitHub {
-        owner = "mixxxdj";
-        repo = "mixxx";
-        rev = "16d57ca6f7496103d2a1376ceafcff823bc31fa0";
-        hash = "sha256-qea93tb1uTXwJeJpPYbXemQpBZBPos1WXR/bKgXNjUc=";
-      };
-    }))
+    mixxx
+    # (mixxx.overrideAttrs (oldAttrs: {
+    #   version = "2.5-bleeding";
+    #   src = fetchFromGitHub {
+    #     owner = "mixxxdj";
+    #     repo = "mixxx";
+    #     rev = "16d57ca6f7496103d2a1376ceafcff823bc31fa0";
+    #     hash = "sha256-qea93tb1uTXwJeJpPYbXemQpBZBPos1WXR/bKgXNjUc=";
+    #   };
+    # }))
     wireshark
     prismlauncher
     qbittorrent

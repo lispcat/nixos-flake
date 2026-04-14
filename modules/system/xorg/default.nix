@@ -1,4 +1,4 @@
-{ mkFeature, pkgs, ... }:
+{ mkFeature, pkgs, pkgs-stable, ... }:
 
 {
   imports = [
@@ -22,9 +22,35 @@
       # ];
       # enable bitmap fonts on xorg
       fonts.fontDir.enable = true;
+
+      # Xorg packages
+      environment.systemPackages = with pkgs; [
+        (haskellPackages.ghcWithPackages (ps: [
+          ps.xmonad ps.xmonad-contrib
+        ]))
+        trayer
+        xmobar
+        xmessage
+        scrot
+        xscreensaver
+        xfce4-power-manager
+        picom
+        dunst
+        xclip
+        dmenu-rs
+        pkgs-stable.kbdd
+        rofi
+        xkb-switch
+        screenkey
+      ];
     })
 
     (mkFeature "xmonad" "Enable xmonad" {
+      environment.systemPackages = with pkgs; [
+        (haskellPackages.ghcWithPackages (ps: [
+          ps.xmonad ps.xmonad-contrib
+        ]))
+      ];
       services.xserver.windowManager.xmonad = {
         enable = true;
         enableContribAndExtras = true;

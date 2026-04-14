@@ -1,5 +1,11 @@
 { pkgs, lib, ... }:
 
+# TODO:
+# - Turn this into a reusable function, where it takes a package,
+#   changes hash, sets path to installer, etc, and finally
+#   returns a new modified package.
+#   Allow for easy multiple renoise installs.
+
 let
   renoise-src = pkgs.requireFile {
     # name = "rns_344_linux_x86_64.tar.gz";

@@ -35,10 +35,9 @@
     greetd.enable = true;
 
     # wayland
-    # hyprland.enable = true;
-    hyprland.enable = false;
+    wayland.enable = false;
     river.enable = false;
-    # river.enable = true;
+    hyprland.enable = false;
 
     # xorg
     xorg.enable = true;

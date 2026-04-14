@@ -3,6 +3,27 @@
 {
   imports = [
 
+    (mkFeature "wayland" "Enable generic wayland stuff" {
+      environment.systemPackages = with pkgs; [
+        wlsunset  # color temperature
+        sway-contrib.grimshot  # screenshot
+        bemenu  # dmenu replacement
+        wbg  # minimal wallpaper daemon
+        wl-clipboard-rs  # cli clipboard access
+        # wmenu
+        swaylock
+        swayidle
+        lswt
+        xwayland
+        waylock
+        fuzzel      # app launcher
+        waybar      # taskbar
+        hyprpaper    # wallpapers
+        hyprpicker   # color-picker
+        hyprland-per-window-layout
+      ];
+    })
+
     # look into this later
     # https://github.com/sjcobb2022/nixos-config/blob/main/hosts/common/optional/greetd.nix
     (mkFeature "greetd" "Enable greetd (supports xorg and wayland)" {
@@ -30,6 +51,13 @@
     })
 
     (mkFeature "river" "Enable riverwm" {
+      environment.systemPackages = with pkgs; [
+        river-classic
+        wideriver
+        sandbar
+        # river
+      ];
+
       programs.river-classic = {
         enable = true;
         xwayland.enable = true;
