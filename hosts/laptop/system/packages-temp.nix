@@ -46,7 +46,6 @@ in {
     neovim
     strace
     alacritty
-    mpv
     feh
     tmux
     btop
@@ -54,7 +53,6 @@ in {
     glances
     nethogs
     ffmpeg
-    yt-dlp
     croc
     exiftool
     ripgrep
@@ -63,6 +61,9 @@ in {
     # findutils
     hyfetch
     uwufetch
+
+    pkgs-stable.mpv             # slow to compile dependency: rusty
+    pkgs-stable.yt-dlp          # slow to compile dependency: rusty
 
     ### Desktop #####################################################
 
@@ -140,12 +141,13 @@ in {
 
     ## Cyber
 
-    (cutter.withPlugins (ps: with ps; [jsdec rz-ghidra]))
+    # (pkgs-stable.cutter.withPlugins (ps: with ps; [jsdec rz-ghidra]))
 
     ### Applications ################################################
 
     firefox
     pkgs-stable.librewolf
+    qutebrowser
     gimp
     keepassxc
     krita
@@ -166,7 +168,6 @@ in {
     # pkgs-stable.openmsx
     boops
     kdePackages.kdenlive
-    ani-cli
     # temp fix for mixxx till 2.6
     mixxx
     # (mixxx.overrideAttrs (oldAttrs: {
@@ -178,12 +179,27 @@ in {
     #     hash = "sha256-qea93tb1uTXwJeJpPYbXemQpBZBPos1WXR/bKgXNjUc=";
     #   };
     # }))
-    wireshark
     prismlauncher
     qbittorrent
-    bottles
+    pkgs-stable.bottles
+    # pkgs-stable.wineasio
+    (pkgs-stable.wineasio.overrideAttrs {
+      buildInputs = [
+        pkgs.pkgsi686Linux.pipewire.jack
+        pkgs.pipewire.jack
+      ];
+    })
+
     j4-dmenu-desktop
     virt-manager
+
+    # pkgs-stable.wireshark
+
+    ### Relocate later ###
+    bspwm
+    sxhkd
+
+    pkgs-stable.ani-cli
 
   ];
 
@@ -229,42 +245,42 @@ in {
     # nerdfonts
     # (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
 
-    # custom
-    (iosevka.override {
-      set = "Custom";
-      privateBuildPlan = ''
-        [buildPlans.IosevkaCustom]
-        family = "Iosevka Custom"
-        spacing = "normal"
-        serifs = "sans"
-        noCvSs = true
-        exportGlyphNames = false
 
-          [buildPlans.IosevkaCustom.ligations]
-          inherits = "dlig"
+    # (pkgs-stable.iosevka.override {
+    #   set = "Custom";
+    #   privateBuildPlan = ''
+    #     [buildPlans.IosevkaCustom]
+    #     family = "Iosevka Custom"
+    #     spacing = "normal"
+    #     serifs = "sans"
+    #     noCvSs = true
+    #     exportGlyphNames = false
 
-        [buildPlans.IosevkaCustom.weights.Regular]
-        shape = 400
-        menu = 400
-        css = 400
+    #       [buildPlans.IosevkaCustom.ligations]
+    #       inherits = "dlig"
 
-        [buildPlans.IosevkaCustom.weights.Bold]
-        shape = 700
-        menu = 700
-        css = 700
+    #     [buildPlans.IosevkaCustom.weights.Regular]
+    #     shape = 400
+    #     menu = 400
+    #     css = 400
 
-        [buildPlans.IosevkaCustom.slopes.Upright]
-        angle = 0
-        shape = "upright"
-        menu = "upright"
-        css = "normal"
+    #     [buildPlans.IosevkaCustom.weights.Bold]
+    #     shape = 700
+    #     menu = 700
+    #     css = 700
 
-        [buildPlans.IosevkaCustom.slopes.Italic]
-        angle = 9.4
-        shape = "italic"
-        menu = "italic"
-        css = "italic"
-      '';
-    })
+    #     [buildPlans.IosevkaCustom.slopes.Upright]
+    #     angle = 0
+    #     shape = "upright"
+    #     menu = "upright"
+    #     css = "normal"
+
+    #     [buildPlans.IosevkaCustom.slopes.Italic]
+    #     angle = 9.4
+    #     shape = "italic"
+    #     menu = "italic"
+    #     css = "italic"
+    #   '';
+    # })
   ];
 }

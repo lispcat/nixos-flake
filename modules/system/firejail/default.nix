@@ -5,6 +5,8 @@
   imports = [
     (mkFeature "firejail" "Creates some firejail wrappers" {
 
+      programs.firejail.enable = true;
+
       ##
 
       environment.systemPackages = with pkgs; [

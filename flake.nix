@@ -5,7 +5,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
 
     # Declarative user environment.
     home-manager.url = "github:nix-community/home-manager";
@@ -36,6 +36,8 @@
   outputs = { nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
+      pkgs-branch = "nixos-unstable";
+      pkgs-stable-branch = "nixos-25.11";
 
       unfree-p = import ./etc/unfree-p.nix nixpkgs;
 
@@ -71,7 +73,7 @@
         nixpkgs.lib.nixosSystem {
           inherit pkgs system;
           specialArgs = {
-            inherit inputs user system pkgs-stable mkFeature;
+            inherit inputs user system pkgs-stable mkFeature pkgs-branch pkgs-stable-branch;
           };
           modules = [
             # hostname
@@ -90,7 +92,7 @@
         inputs.home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
-            inherit inputs user system pkgs-stable mkFeature;
+            inherit inputs user system pkgs-stable mkFeature pkgs-branch pkgs-stable-branch;
           };
           modules = [
             # home lib

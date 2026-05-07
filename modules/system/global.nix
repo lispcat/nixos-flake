@@ -1,4 +1,4 @@
-{ inputs, pkgs, user, mkFeature, ... }:
+{ inputs, pkgs, pkgs-stable, user, mkFeature, lib, pkgs-branch, pkgs-stable-branch, ... }:
 
 {
   imports = [
@@ -10,7 +10,7 @@
         users.${user} = {
           isNormalUser = true;
           description = "${user}";
-          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" "input" ];
+          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" "input" "pipewire" "realtime" ];
         };
       };
 
@@ -114,5 +114,10 @@
       ## Misc ##############################################
 
       programs.dconf.enable = true;
+
+      # write nixpkgs version to file (for scripts)
+      environment.etc."nixpkgs-branch".text = pkgs-branch;
+      environment.etc."nixpkgs-stable-branch".text = pkgs-stable-branch;
     })
-  ]; }
+  ];
+}

@@ -1,8 +1,9 @@
-{ pkgs, pkgs-stable, inputs, mkFeature, ... }:
+{ pkgs, pkgs-stable, inputs, mkFeature, user, ... }:
 
 let
   din-is-noise   = pkgs.callPackage ./din-is-noise { withJack = true; };
   renoise-custom = pkgs.callPackage ./renoise { inherit inputs; };
+  bitwig-custom  = pkgs.callPackage ./bitwig { inherit inputs; };
   lsp-plugins    = pkgs.callPackage ./lsp-plugins {};
   rave-gen-2     = pkgs.callPackage ./rave-generator-2 {};
   ildaeil        = pkgs.callPackage ./ildaeil {};
@@ -42,6 +43,8 @@ in {
         das_watchdog.enable = true; # prevent realtime hangs?
       };
 
+      # users.users.${user}.extraGroups = [ "pipewire" "realtime" ];
+
       environment.systemPackages = with pkgs; [
         ## Custom
         renoise-custom
@@ -75,7 +78,8 @@ in {
         ## Daws
         reaper
         audacity
-        pkgs-stable.bitwig-studio # proprietary!!!
+        # bitwig-studio6 # proprietary!!!
+        bitwig-custom
         sunvox
 
         ## Tools

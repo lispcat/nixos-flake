@@ -42,6 +42,7 @@
         rofi
         xkb-switch
         screenkey
+        xdotool
       ];
     })
 
