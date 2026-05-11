@@ -17,10 +17,12 @@
       };
 
 
+      # TODO: instead of hacked together steam.profile, just have custom .config/firejail/steam.local
+      # all `ignore` statements will be applied to future invocations.
 
-      environment.etc = {
-        "firejail/steam.profile".source = ./files/steam.profile;
-      };
+      # environment.etc = {
+      #   "firejail/steam.profile".source = ./files/steam.profile;
+      # };
       programs.firejail.wrappedBinaries.steam = {
         executable = "${pkgs.steam}/bin/steam";
         # profile = "/etc/firejail/steam.profile";
@@ -38,23 +40,23 @@
 
       environment.etc = {
         "firejail/osu-lazer.profile".text = ''
-      # whitelist ~/./firejail/osulazer
+          # whitelist ~/./firejail/osulazer
 
-      mkdir ~/.local/share/osu
-      whitelist ~/.local/share/osu
+          mkdir ~/.local/share/osu
+          whitelist ~/.local/share/osu
 
-      whitelist ~/.config
+          whitelist ~/.config
 
-      ignore net none
-      ignore no3d
-      ignore nosound
-      # TODO: What syscalls?
-      ignore seccomp
-      protocol unix,inet,inet6,netlink
-      # include ~/.config/firejail/inc/firefox-escape.inc
-      # include ~/.config/firejail/inc/discord-ipc.inc
-      # include ~/.config/firejail/inc/default.inc
-    '';
+          ignore net none
+          ignore no3d
+          ignore nosound
+          # TODO: What syscalls?
+          ignore seccomp
+          protocol unix,inet,inet6,netlink
+          # include ~/.config/firejail/inc/firefox-escape.inc
+          # include ~/.config/firejail/inc/discord-ipc.inc
+          # include ~/.config/firejail/inc/default.inc
+        '';
       };
       programs.firejail.wrappedBinaries."osu!" = {
         executable = "${pkgs.osu-lazer-bin}/bin/osu!";

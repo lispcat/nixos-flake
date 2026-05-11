@@ -28,10 +28,10 @@
           notifications = true;
         };
         mpdscribble = {
-          enable = true;
+          enable = false;
           endpoints = {
             "last.fm" = {
-              username = "window010101";
+              # username = ""; # TODO
               # TODO: requires SOPS (is pretty easy)
               # https://github.com/Serpentian/AlfheimOS/blob/master/system/security/sops.nix
               # passwordFile = "/run/secrets/lastfm";
@@ -49,12 +49,19 @@
       home.file = {
         ".config/yabridgectl/config.toml".text = ''
           plugin_dirs = [
-            '/home/${user}/.win-vst',
-            '/home/${user}/.wine/drive_c/Program Files/Common Files/VST3',
-            '/home/${user}/.wine/drive_c/Program Files/Steinberg/VstPlugins'
+            '/home/${user}/.wine-vst/drive_c/Program Files/VstPlugins',
+            '/home/${user}/.wine-vst/drive_c/Program Files/Common Files/Steinberg/VST2',
+            '/home/${user}/.wine-vst/drive_c/Program Files/Common Files/VST3',
+
+            '/home/${user}/.wine-vst-2/drive_c/Program Files/VstPlugins',
+            '/home/${user}/.wine-vst/drive_c/Program Files/Common Files/Steinberg/VST2',
+            '/home/${user}/.wine-vst-2/drive_c/Program Files/Common Files/VST3',
+
+            # '/home/${user}/.win-vst',
+            # '/home/${user}/.wine/drive_c/Program Files/Common Files/VST3',
+            # '/home/${user}/.wine/drive_c/Program Files/Steinberg/VstPlugins'
           ]
           vst2_location = 'centralized'
-          no_verify = false
           blacklist = []
 
           # [vst2]

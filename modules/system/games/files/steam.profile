@@ -227,6 +227,12 @@ private-tmp
 
 ### CUSTOM ####################################################################
 
+# maybe fix d-bus issue
+ignore nogroups
+ignore dbus-user
+ignore dbus-system
+
+
 # Allow VR and camera-based motion tracking
 ignore novideo
 

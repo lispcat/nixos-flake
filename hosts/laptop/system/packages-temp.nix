@@ -142,6 +142,7 @@ in {
     ## Cyber
 
     # (pkgs-stable.cutter.withPlugins (ps: with ps; [jsdec rz-ghidra]))
+    pe-bear
 
     ### Applications ################################################
 
@@ -245,6 +246,9 @@ in {
     # nerdfonts
     # (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
 
+    # reapertips theme deps
+    fira
+    roboto
 
     # (pkgs-stable.iosevka.override {
     #   set = "Custom";

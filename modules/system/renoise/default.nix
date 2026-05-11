@@ -87,6 +87,8 @@ in {
         rubberband # timestretching
         qpwgraph # Jack connections interface
         carla # audio plugin host (maybe run Lv2 inside?!?!)
+        aj-snapshot # save and resume jack routing
+        qjackctl # jack connections dashboard
 
         ## VSTs
         fire               # multi-band distortion
