@@ -12,7 +12,7 @@
     ./games
     ./hardware
     ./misc
-    ./navidrome
+    ./server
     ./networking
     ./renoise
     ./shells
