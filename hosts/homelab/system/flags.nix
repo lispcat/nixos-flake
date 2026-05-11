@@ -32,6 +32,9 @@
     sshd.enable = true;
     tailscale.enable = true;
 
+    # server
+    navidrome.enable = true;
+
     # renoise
     renoise.enable = false;
 
