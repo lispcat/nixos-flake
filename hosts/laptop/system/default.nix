@@ -36,5 +36,36 @@
     };
   };
 
+  # TODO: move elsewhere: sshfs homelab music mount
 
+  fileSystems."/home/${user}/Music/homelab" = {
+    device = "rin@homelab:/home/rin/Music";
+    fsType = "sshfs";
+    options = [
+      # path to ssh priv key (ensure pubkey in host's authorized_keys)
+      "identityfile=/home/sui/.ssh/homelab_sshfs"
+
+      # network fs, wait for network connection before mounting
+      "_netdev"
+
+      # non-root can access mount
+      "allow_other"
+
+      # lazy mounting
+      "x-systemd.automount"
+
+      # tailscale service dependency
+      "x-systemd.requires=tailscaled.service"
+      "x-systemd.after=tailscaled.service"
+
+      # prevent hanging
+      "x-systemd.mount-timeout=30s"
+
+      # automatically reconnect if lose connection
+      "reconnect"
+
+      # start checking for reconnect after x seconds
+      "ServerAliveInterval=15"
+    ];
+  };
 }

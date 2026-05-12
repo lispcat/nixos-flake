@@ -144,6 +144,14 @@ in {
     # (pkgs-stable.cutter.withPlugins (ps: with ps; [jsdec rz-ghidra]))
     pe-bear
 
+    ### Music #######################################################
+
+    beets
+    sshfs
+    picard
+    chromaprint
+    feishin
+
     ### Applications ################################################
 
     firefox

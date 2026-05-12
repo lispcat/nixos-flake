@@ -5,10 +5,14 @@ update:
 
 ## laptop ##
 
-laptop-sys:
+automount-handle:
+	sudo systemctl stop home-sui-Music-homelab.automount || true
+	sudo systemctl stop home-sui-Music-homelab.mount || true
+
+laptop-sys: automount-handle
 	sudo nixos-rebuild switch --flake .#laptop-sys --impure
 
-laptop-sys-build:
+laptop-sys-build: automount-handle
 	sudo nixos-rebuild build --flake .#laptop-sys --impure
 
 laptop-home:
