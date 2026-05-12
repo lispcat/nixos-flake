@@ -35,5 +35,11 @@
     ### Applications ###
 
     librewolf
+
+    ### Music ###
+    beets
+    sshfs
+    picard
+    chromaprint
   ];
 }

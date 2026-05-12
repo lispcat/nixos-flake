@@ -112,7 +112,7 @@
         };
         "homelab-sys" = mkSystem {
           name = "homelab";
-          host = "nixos";
+          host = "nixlab";
           user = "rin";
         };
       };
