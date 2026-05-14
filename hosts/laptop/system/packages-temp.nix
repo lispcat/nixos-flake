@@ -138,6 +138,8 @@ in {
     leiningen
     python3
     essentia-extractor
+    restic
+    stow
 
     ## Cyber
 
@@ -146,10 +148,12 @@ in {
 
     ### Music #######################################################
 
+    #-- slow when ran remotely --#
     beets
+    # picard
+    # chromaprint
+
     sshfs
-    picard
-    chromaprint
     feishin
 
     ### Applications ################################################
@@ -208,7 +212,7 @@ in {
     bspwm
     sxhkd
 
-    pkgs-stable.ani-cli
+    ani-cli
 
   ];
 

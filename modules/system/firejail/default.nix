@@ -31,7 +31,7 @@
 
       programs.firejail.wrappedBinaries.prismlauncher = {
         executable = "${pkgs.prismlauncher}/bin/prismlauncher";
-        profile = "${pkgs.prismlauncher}/etc/firejail/prismlauncher.profile";
+        profile = "${pkgs.firejail}/etc/firejail/prismlauncher.profile";
       };
 
       ### Wine #################################################
