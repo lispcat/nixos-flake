@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, pkgs-stable, ... }:
 
 {
   # List packages installed in system profile. To search, run:
@@ -37,9 +37,10 @@
     librewolf
 
     ### Music ###
-    beets
     sshfs
     picard
     chromaprint
+    python314Packages.beets
+    # python314Packages.beets-copyartifacts
   ];
 }

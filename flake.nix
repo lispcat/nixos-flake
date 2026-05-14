@@ -40,14 +40,17 @@
       pkgs-stable-branch = "nixos-25.11";
 
       unfree-p = import ./etc/unfree-p.nix nixpkgs;
+      broken-p = import ./etc/broken-p.nix nixpkgs;
 
       pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfreePredicate = unfree-p;
+        config.allowBrokenPredicate = broken-p;
       };
       pkgs-stable = import inputs.nixpkgs-stable {
         inherit system;
         config.allowUnfreePredicate = unfree-p;
+        config.allowBrokenPredicate = broken-p;
       };
 
       # Boilerplate killer (hacky warning...)

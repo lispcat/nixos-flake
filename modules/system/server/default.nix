@@ -17,7 +17,7 @@
             BaseUrl = "";
             LogLevel = "info";
 
-            ScanSchedule = "@every 1h";     # scan for new music
+            ScanSchedule = "@every 30m";     # scan for new music
             TranscodingCacheSize = "500MB";
             SessionTimeout = "24h";
 
@@ -45,7 +45,7 @@
         systemd.timers.music-permission-fix = {
           wantedBy = [ "timers.target" ];
           timerConfig = {
-            OnCalendar = "hourly";
+            OnCalendar = "*-*-* *:00,30:00";
             Persistent = true;  # runs on next boot if it missed its window
           };
         };
