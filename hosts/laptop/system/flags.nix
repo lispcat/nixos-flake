@@ -32,6 +32,7 @@
     navidrome.enable = false;
     vpn-proxy.enable = false;
     slskd.enable = false;
+    slskdn.enable = false;
 
     # renoise
     renoise.enable = true;

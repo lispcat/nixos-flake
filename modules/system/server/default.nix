@@ -89,35 +89,58 @@
       };
     })
 
+    ### slskdN(OT)
+
+    (mkFeature "slskdn" "Enable slskdN server" {
+      environment.etc."slskdn/docker-compose.yml".source =
+        ./slskdn/docker-compose.yml;
+
+      systemd.services.slskdn = {
+        description = "slskdN soulseek daemon";
+        after    = [ "docker.service" "network-online.target" "vpn-proxy.service" ];
+        requires = [ "docker.service" ];
+        wants    = [ "network-online.target" "vpn-proxy.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type            = "oneshot";
+          RemainAfterExit = true;
+          WorkingDirectory = "/etc/slskdn";
+          EnvironmentFile  = "/etc/secrets/slskdn.env";
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+        };
+      };
+    })
+
     ### slskd ###
 
     (let
       src-path = "/mnt/music/main";
       dl-path = "/mnt/music/downloaded";
     in
-     mkFeature "slskd" "Enable slskd server" {
-      services.slskd = {
-        enable = true;
-        environmentFile = "/etc/secrets/slskd.env"; # username & pass
-        settings = {
-          soulseek = {
-            connection.proxy = {
-              enabled = true;
-              address = "127.0.0.1";
-              port    = 1080;
+      mkFeature "slskd" "Enable slskd server" {
+        services.slskd = {
+          enable = true;
+          environmentFile = "/etc/secrets/slskd.env"; # username & pass
+          settings = {
+            soulseek = {
+              connection.proxy = {
+                enabled = true;
+                address = "127.0.0.1";
+                port    = 1080;
+              };
             };
+            shares.directories  = [ src-path ];
+            downloads.directory = dl-path;
           };
-          shares.directories  = [ src-path ];
-          downloads.directory = dl-path;
         };
-      };
-      systemd.services.slskd.serviceConfig = {
-        # extra security
-        ReadOnlyPaths = [ src-path ];
-        ReadWritePaths = [ dl-path ];
-      };
-      users.users.slskd.extraGroups = [ "users" ];
-    })
+        systemd.services.slskd.serviceConfig = {
+          # extra security
+          ReadOnlyPaths = [ src-path ];
+          ReadWritePaths = [ dl-path ];
+        };
+        users.users.slskd.extraGroups = [ "users" ];
+      })
 
   ];
 }

@@ -35,7 +35,8 @@
     # server
     navidrome.enable = true;
     vpn-proxy.enable = true;
-    slskd.enable = true;
+    slskd.enable = false;
+    slskdn.enable = true;
 
     # renoise
     renoise.enable = false;

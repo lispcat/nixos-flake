@@ -1,0 +1,24 @@
+services:
+  slskdn:
+    image: ghcr.io/snapetech/slskdn:latest
+    container_name: slskdn
+    ports:
+      - "5030:5030"   # web UI
+      - "50300:50300" # soulseek listen port
+    environment:
+      - SLSKD_SLSK_USERNAME=${SLSKD_SLSK_USERNAME}
+      - SLSKD_SLSK_PASSWORD=${SLSKD_SLSK_PASSWORD}
+      - SLSKD_USERNAME=${SLSKD_USERNAME}
+      - SLSKD_PASSWORD=${SLSKD_PASSWORD}
+      - SLSKD_SLSK_PROXY=true
+      - SLSKD_SLSK_PROXY_ADDRESS=172.17.0.1  # docker host IP, where your socks5 is
+      - SLSKD_SLSK_PROXY_PORT=1080
+      - SLSKD_REMOTE_CONFIGURATION=false
+    volumes:
+      - /mnt/music/main:/music:ro
+      - /mnt/music/downloaded:/downloads:rw
+      - slskdn-data:/app
+    restart: unless-stopped
+
+volumes:
+  slskdn-data:
