@@ -34,6 +34,8 @@
 
     # server
     navidrome.enable = true;
+    vpn-proxy.enable = true;
+    slskd.enable = true;
 
     # renoise
     renoise.enable = false;
@@ -52,8 +54,5 @@
 
     # zsh
     zsh.enable = true;
-
-    # vpn proxy
-    vpn-proxy.enable = true;
   };
 }

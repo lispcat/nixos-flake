@@ -1,4 +1,4 @@
-{ lib, pkgs, config, user, mkFeature, ... }:
+{ user, lib, pkgs, config, mkFeature, ... }:
 
 {
   imports = [
@@ -6,7 +6,7 @@
     ### Navidrome ###
 
     (let
-      musicPath = "/home/${user}/Music/library/main";
+      musicPath = "/mnt/music/main";
     in
       mkFeature "navidrome" "Enable navidrome server" {
         services.navidrome = {
@@ -23,37 +23,30 @@
             ScanSchedule = "@every 30m";     # scan for new music
             TranscodingCacheSize = "500MB";
             SessionTimeout = "24h";
-
-            # TODO: move secret from hard path to sops
-            # LastFM.ApiKey = builtins.readFile /etc/secrets/lastfm-api.key;
-            # LastFM.Secret = builtins.readFile /etc/secrets/lastfm-secret.key;
           };
         };
-
-        # Environment vars
         systemd.services.navidrome.serviceConfig = {
+          # env vars
           EnvironmentFile = "/etc/secrets/navidrome.env";
-        };
-
-        # Make music directory accessible to navidrome
-        systemd.services.navidrome.serviceConfig = {
+          # for extra security
           ReadOnlyPaths = [ musicPath ];
-          ProtectHome = lib.mkForce "read-only";
         };
         users.users.navidrome.extraGroups = [ "users" ];
 
+        # TODO: maybe needed, in case broken imports?
         # Continuously fix perms on all files in music dir
         systemd.services.music-permission-fix = {
           description = "Fix music library group permissions";
           script = ''
-            chmod -R g+rX ${musicPath}
+            chown -R ${user}:users ${musicPath}
+            chmod -R u=rwX,g=rX,o= ${musicPath}
           '';
           serviceConfig.Type = "oneshot";
         };
         systemd.timers.music-permission-fix = {
           wantedBy = [ "timers.target" ];
           timerConfig = {
-            OnCalendar = "*-*-* *:00,30:00";
+            OnCalendar = "*-*-* 09:00:00";
             Persistent = true;  # runs on next boot if it missed its window
           };
         };
@@ -72,6 +65,7 @@
         # start after docker is running and network is up
         after = [ "docker.service" "network-online.target" ];
         requires = [ "docker.service" ];
+        wants = [ "network-online.target" ];
 
         # autostart on boot
         wantedBy = [ "multi-user.target" ];
@@ -93,6 +87,36 @@
           ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
         };
       };
+    })
+
+    ### slskd ###
+
+    (let
+      src-path = "/mnt/music/main";
+      dl-path = "/mnt/music/downloaded";
+    in
+     mkFeature "slskd" "Enable slskd server" {
+      services.slskd = {
+        enable = true;
+        environmentFile = "/etc/secrets/slskd.env"; # username & pass
+        settings = {
+          soulseek = {
+            connection.proxy = {
+              enabled = true;
+              address = "127.0.0.1";
+              port    = 1080;
+            };
+          };
+          shares.directories  = [ src-path ];
+          downloads.directory = dl-path;
+        };
+      };
+      systemd.services.slskd.serviceConfig = {
+        # extra security
+        ReadOnlyPaths = [ src-path ];
+        ReadWritePaths = [ dl-path ];
+      };
+      users.users.slskd.extraGroups = [ "users" ];
     })
 
   ];

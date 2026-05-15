@@ -26,16 +26,6 @@
         qemu.package = pkgs.qemu_kvm;
       };
       users.users.${user}.extraGroups = [ "libvirtd" "docker" ];
-
-      # TODO: move this into its own module
-      virtualisation.docker = {
-        enable = true;
-        storageDriver = "btrfs";
-      };
-      environment.systemPackages = with pkgs; [
-        docker-compose
-      ];
-
     })
   ];
 }

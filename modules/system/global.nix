@@ -78,6 +78,14 @@
         config.common.default = "*";
       };
 
+      virtualisation.docker = {
+        enable = true;
+      };
+      environment.systemPackages = with pkgs; [
+        docker-compose
+        # docker
+      ];
+
       ## Linux #############################################
 
       # polkit (dont really know what this does)
