@@ -29,6 +29,9 @@
 
     # declarative flatpaks
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
+
+    # slsdn
+    slskdn.url = "github:snapetech/slskdn";
   };
 
   ## Outputs:

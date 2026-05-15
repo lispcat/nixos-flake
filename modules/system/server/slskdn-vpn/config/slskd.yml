@@ -1,0 +1,28 @@
+soulseek:
+  listen_port: 50300
+  listen_ip_address: 0.0.0.0  # do i need this?
+# integrations:
+#   vpn:
+#     enabled: true
+#     port_forwarding: true
+#     polling_interval: 2500
+#     gluetun:
+#       url: http://127.0.0.1:8000
+
+  # connection:
+  #   proxy:
+  #     enabled: true
+  #     address: 172.17.0.1
+  #     port: 1080
+  #     username: ""
+  #     password: ""
+shares:
+  directories:
+    - /main
+directories:
+  incomplete: /incomplete
+  downloads: /downloads
+
+mesh:
+  enable_soulseek_capability_handshake: true  # ?
+  enable_soulseek_rendezvous: true  # try enabling this to help peer discovery

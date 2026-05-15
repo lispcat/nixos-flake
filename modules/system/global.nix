@@ -77,6 +77,7 @@
         ];
         config.common.default = "*";
       };
+      xdg.mime.enable = true;
 
       virtualisation.docker = {
         enable = true;

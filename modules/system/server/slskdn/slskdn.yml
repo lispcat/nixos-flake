@@ -1,0 +1,20 @@
+soulseek:
+  listen_port: 61241  # vpn's forwarded port
+  connection:
+    proxy:
+      enabled: true
+      address: 172.17.0.1
+      port: 1080
+      username: ~
+      password: ~
+shares:
+  directories:
+    - /main
+directories:
+  incomplete: /incomplete
+  downloads: /downloads
+
+# test:
+mesh:
+  enable_soulseek_capability_handshake: true  # ?
+  enable_soulseek_rendezvous: true  # try enabling this to help peer discovery

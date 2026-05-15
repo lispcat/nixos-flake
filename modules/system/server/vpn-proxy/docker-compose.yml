@@ -6,17 +6,25 @@ services:
       - NET_ADMIN
     dns: 1.1.1.1
     ports:
-      - "127.0.0.1:1080:1080"  # Expose the SOCKS5 port here
+      - "0.0.0.0:1080:1080"  # Expose the SOCKS5 port here
+      # - "5030:5030"          # test
+      - "61241:61241"        # test
+      # - "50305:50305/udp"  # test
     environment:
       # --- VPN Settings ---
       - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
+      # - VPN_PORT_FORWARDING=on  # just in case
       - WIREGUARD_ADDRESSES=${WG_ADDRESSES}
       - WIREGUARD_ENDPOINT_IP=${WG_ENDPOINT_IP}
       - WIREGUARD_ENDPOINT_PORT=${WG_ENDPOINT_PORT}
       - WIREGUARD_PUBLIC_KEY=${WG_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${WG_PRIVATE_KEY}
+      - FIREWALL_VPN_INPUT_PORTS=61241,61242,50305  # test
+      # - FIREWALL_VPN_INPUT_PORTS=50300  # needed for port forwarding?
     # gluetun exposes a health checkpoint once the vpn tunnel is up
+      - VPN_PORT_FORWARDING=on  # the fix?
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn  # the fix?
     healthcheck:
       test: [ "CMD", "/gluetun-entrypoint", "healthcheck" ]
       interval: 5s

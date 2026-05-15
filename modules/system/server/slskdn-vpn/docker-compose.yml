@@ -1,0 +1,88 @@
+services:
+  vpn:
+    # image: qmcgaw/gluetun
+    build: .
+    container_name: vpn-gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    dns: 1.1.1.1
+    ports:
+      - "0.0.0.0:1080:1080"  # expose socks proxy to LAN (only external)
+      - "5030:5030"          # expose web UI to LAN
+      # - "50300:50300"      # not needed, inbound goes through tun0
+      # custom listen port, check vpn-gluetun logs for forwarded port
+      # - "61241:61241"
+      # - "50305:50305/udp"   # prob not needed
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ADDRESSES=${WG_ADDRESSES}
+      - WIREGUARD_ENDPOINT_IP=${WG_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WG_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_PRIVATE_KEY}
+      - VPN_PORT_FORWARDING=on  # the fix?
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn  # the fix?
+      # - FIREWALL_VPN_INPUT_PORTS=61241,61242,50305 # no need, since port_forwarding
+      # temp:
+      # - HTTP_CONTROL_SERVER_API_KEY=${GLUETUN_KEY}
+      # - HTTP_CONTROL_SERVER_LOG=off
+      # - HTTP_CONTROL_SERVER_API_KEY=  # empty = no auth
+      # - HTTP_CONTROL_SERVER_AUTH_CONFIG_FILEPATH=/nonexistent
+      # - GLUETUN_CONTROL_SERVER_AUTHENTICATION=off
+      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'yq -i ".soulseek.listen_port = {{PORT}}" /slskd-config/slskd.yml'
+    volumes:
+      # - ./config:/slskd-config:rw
+      # Point to absolute path for the shared, writable config:
+      - /var/lib/slskdn-vpn/config:/slskd-config:rw
+      #   - ./slskd.yml:/slskd.yml # for easy access
+      # - /etc/slskdn-vpn/gluetun-auth.toml:/gluetun/auth/config.toml:ro
+      # - ./forwarded_port:/tmp/gluetun/forwarded_port  # gluetun writes the port here
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # socks-proxy:
+  #   image: tarampampam/3proxy
+  #   container_name: socks-proxy
+  #   network_mode: "service:gluetun"
+  #   depends_on:
+  #     vpn:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+
+  slskdn:
+    image: ghcr.io/snapetech/slskdn:latest
+    container_name: slskdn
+    network_mode: "service:vpn"  # share vpn's network namespace
+    depends_on:
+      vpn:
+        condition: service_healthy
+    environment:
+      - PUID=1000
+      - PGID=100
+      - SLSKD_SLSK_USERNAME=${SLSKD_SLSK_USERNAME}
+      - SLSKD_SLSK_PASSWORD=${SLSKD_SLSK_PASSWORD}
+      - SLSKD_USERNAME=${SLSKD_USERNAME}
+      - SLSKD_PASSWORD=${SLSKD_PASSWORD}
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - SLSKD_CONFIG=/config/slskd.yml
+    volumes:
+      # Point the slskdn container to the config file in the new shared location:
+      - /var/lib/slskdn-vpn/config/slskd.yml:/config/slskd.yml:rw
+      # - ./config/slskd.yml:/config/slskd.yml:rw
+      # - ./slskd.yml:/app/slskd.yml # rw for runtime modify (listen_port)
+      - /mnt/music/main:/main:ro
+      - /mnt/music/downloads:/downloads:rw
+      - /mnt/music/incomplete:/incomplete:rw
+      - slskdn-data:/app
+    restart: unless-stopped
+
+volumes:
+  slskdn-data:

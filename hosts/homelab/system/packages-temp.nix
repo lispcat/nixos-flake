@@ -35,12 +35,19 @@
     ### Applications ###
 
     librewolf
+    kdePackages.dolphin # good default
+
+    ### X utils ###
+
+    xdg-utils # for xdg-mime
 
     ### Music ###
+
     sshfs
     picard
     chromaprint
     python314Packages.beets
     # python314Packages.beets-copyartifacts
+    nicotine-plus
   ];
 }

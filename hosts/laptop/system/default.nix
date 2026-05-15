@@ -39,7 +39,7 @@
   # TODO: move elsewhere: sshfs homelab music mount
 
   fileSystems."/home/${user}/Homelab" = {
-    device = "rin@homelab:/home/rin";
+    device = "rin@homelab:/mnt/music";
     fsType = "sshfs";
     options = [
       # path to ssh priv key (ensure pubkey in host's authorized_keys)

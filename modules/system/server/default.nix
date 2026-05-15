@@ -1,4 +1,4 @@
-{ user, lib, pkgs, config, mkFeature, ... }:
+{ inputs, system, user, lib, pkgs, config, mkFeature, ... }:
 
 {
   imports = [
@@ -40,7 +40,7 @@
           description = "Fix music library group permissions";
           script = ''
             chown -R ${user}:users ${musicHome}
-            chmod -R u=rwX,g=rX,o= ${musicHome}
+            chmod -R u=rwX,g=rwX,o= ${musicHome}
           '';
           serviceConfig.Type = "oneshot";
         };
@@ -53,6 +53,45 @@
         };
       })
 
+    ### slskdN(OT) + proxy
+
+    (mkFeature "slskdn-vpn" "Enable slskdN + vpn proxy" {
+      environment.etc."slskdn-vpn/docker-compose.yml".source =
+        ./slskdn-vpn/docker-compose.yml;
+      environment.etc."slskdn-vpn/Dockerfile".source =
+        ./slskdn-vpn/Dockerfile;
+      # environment.etc."slskdn-vpn/config".source =
+      #   ./slskdn-vpn/config;
+      # environment.etc."slskdn-vpn/gluetun-auth.toml".source =
+      #   /etc/secrets/gluetun-auth.toml;
+
+      systemd.services.slskdn-vpn = {
+        description = "slskdN soulseek daemon + vpn";
+        after    = [ "docker.service" "network-online.target" ];
+        requires = [ "docker.service" ];
+        wants    = [ "network-online.target" ];
+        wantedBy = [ "multi-user.target" ];
+        # prepare the writable directory for slskd.yml
+        preStart = ''
+          # Ensure target directory exists and has reasonable permissions
+          ${pkgs.coreutils}/bin/mkdir -p /var/lib/slskdn-vpn/config
+          # Copy initial config file from Nix source into the writable location
+          # Command only runs if the destination file doesn't exist or is older,
+          # preserving the changes made by the gluetun container on subsequent restarts.
+          ${pkgs.coreutils}/bin/cp --update ${./slskdn-vpn/config/slskd.yml} /var/lib/slskdn-vpn/config/slskd.yml
+        '';
+        serviceConfig = {
+          Type             = "oneshot";
+          RemainAfterExit  = true;
+          WorkingDirectory = "/etc/slskdn-vpn";
+          EnvironmentFile  = "/etc/secrets/slskdn-vpn.env";
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+        };
+      };
+      networking.firewall.allowedTCPPorts = [ 5030 50300 ];
+    })
+
     ### VPN Proxy ###
 
     (mkFeature "vpn-proxy" "Enable per-app vpn proxy" {
@@ -63,29 +102,18 @@
       # as systemd service
       systemd.services.vpn-proxy = {
         description = "Socks5 vpn proxy";
-        # start after docker is running and network is up
-        after = [ "docker.service" "network-online.target" ];
+        after    = [ "docker.service" "network-online.target" ]; # start after docker + network
         requires = [ "docker.service" ];
-        wants = [ "network-online.target" ];
-
-        # autostart on boot
-        wantedBy = [ "multi-user.target" ];
+        wants    = [ "network-online.target" ];
+        wantedBy = [ "multi-user.target" ]; # autostart on boot
 
         serviceConfig = {
-          # oneshot: keep service running after process exits
-          # RemainAfterExit keeps service active after exit
-          Type = "oneshot";
-          RemainAfterExit = true;
-
-          # WorkingDirectory defines path to docker-compose.yml
-          # EnvironmentFile defines path to env file
-          WorkingDirectory = "/etc/vpn-proxy";
-          EnvironmentFile = "/etc/secrets/vpn.env";
-
-          # start containers, clean up old runs
-          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
-          # stop containers on `systemctl stop` or shutdown
-          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+          Type             = "oneshot";  # keep service running after process exits
+          RemainAfterExit  = true;  # keeps service active after exit
+          WorkingDirectory = "/etc/vpn-proxy";  # path to docker-compose.yml
+          EnvironmentFile  = "/etc/secrets/vpn-laptop.env";  # path to env file
+          ExecStart        = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          ExecStop         = "${pkgs.docker-compose}/bin/docker-compose down";
         };
       };
     })
@@ -95,6 +123,8 @@
     (mkFeature "slskdn" "Enable slskdN server" {
       environment.etc."slskdn/docker-compose.yml".source =
         ./slskdn/docker-compose.yml;
+      environment.etc."slskdn/slskdn.yml".source =
+        ./slskdn/slskdn.yml;
 
       systemd.services.slskdn = {
         description = "slskdN soulseek daemon";
@@ -103,43 +133,58 @@
         wants    = [ "network-online.target" "vpn-proxy.service" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
-          Type            = "oneshot";
-          RemainAfterExit = true;
+          Type             = "oneshot";
+          RemainAfterExit  = true;
           WorkingDirectory = "/etc/slskdn";
           EnvironmentFile  = "/etc/secrets/slskdn.env";
           ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
           ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
         };
       };
+      networking.firewall.allowedTCPPorts = [ 5030 50300 61241 ];
     })
 
     ### slskd ###
 
     (let
       src-path = "/mnt/music/main";
-      dl-path = "/mnt/music/downloaded";
+      dl-path = "/mnt/music/downloads";
+      inc-path = "/mnt/music/incomplete";
     in
       mkFeature "slskd" "Enable slskd server" {
         services.slskd = {
+          # package = inputs.slskdn.packages.${pkgs.system}.default;
           enable = true;
-          environmentFile = "/etc/secrets/slskd.env"; # username & pass
+          environmentFile = "/etc/secrets/slskdn.env";
+          group = "users";
+
           settings = {
+            # network.address = "";
+            # network.port = 5030;
+            web.address = "0.0.0.0";  # needed for web ui
+
             soulseek = {
+              # listen_port = 61241;  # port forwarded port
               connection.proxy = {
                 enabled = true;
-                address = "127.0.0.1";
+                address = "0.0.0.0";
                 port    = 1080;
               };
             };
             shares.directories  = [ src-path ];
-            downloads.directory = dl-path;
+            directories.downloads = dl-path;
+            directories.incomplete = inc-path;
           };
         };
         systemd.services.slskd.serviceConfig = {
-          # extra security
           ReadOnlyPaths = [ src-path ];
-          ReadWritePaths = [ dl-path ];
+          ReadWritePaths = [ dl-path inc-path ];
         };
+        # not the solution
+        # systemd.services.slskd.environment = {
+        #   ALL_PROXY = "socks5://127.0.0.1:1080";
+        #   all_proxy = "socks5://127.0.0.1:1080";
+        # };
         users.users.slskd.extraGroups = [ "users" ];
       })
 
