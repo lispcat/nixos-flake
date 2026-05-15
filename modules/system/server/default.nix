@@ -6,6 +6,7 @@
     ### Navidrome ###
 
     (let
+      musicHome = "/mnt/music";
       musicPath = "/mnt/music/main";
     in
       mkFeature "navidrome" "Enable navidrome server" {
@@ -38,8 +39,8 @@
         systemd.services.music-permission-fix = {
           description = "Fix music library group permissions";
           script = ''
-            chown -R ${user}:users ${musicPath}
-            chmod -R u=rwX,g=rX,o= ${musicPath}
+            chown -R ${user}:users ${musicHome}
+            chmod -R u=rwX,g=rX,o= ${musicHome}
           '';
           serviceConfig.Type = "oneshot";
         };
