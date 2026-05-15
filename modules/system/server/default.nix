@@ -2,6 +2,9 @@
 
 {
   imports = [
+
+    ### Navidrome ###
+
     (let
       musicPath = "/home/${user}/Music/library/main";
     in
@@ -55,5 +58,42 @@
           };
         };
       })
+
+    ### VPN Proxy ###
+
+    (mkFeature "vpn-proxy" "Enable per-app vpn proxy" {
+      # copy docker-compose.yml into store
+      environment.etc."vpn-proxy/docker-compose.yml".source =
+        ./vpn-proxy/docker-compose.yml;
+
+      # as systemd service
+      systemd.services.vpn-proxy = {
+        description = "Socks5 vpn proxy";
+        # start after docker is running and network is up
+        after = [ "docker.service" "network-online.target" ];
+        requires = [ "docker.service" ];
+
+        # autostart on boot
+        wantedBy = [ "multi-user.target" ];
+
+        serviceConfig = {
+          # oneshot: keep service running after process exits
+          # RemainAfterExit keeps service active after exit
+          Type = "oneshot";
+          RemainAfterExit = true;
+
+          # WorkingDirectory defines path to docker-compose.yml
+          # EnvironmentFile defines path to env file
+          WorkingDirectory = "/etc/vpn-proxy";
+          EnvironmentFile = "/etc/secrets/vpn.env";
+
+          # start containers, clean up old runs
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          # stop containers on `systemctl stop` or shutdown
+          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+        };
+      };
+    })
+
   ];
 }

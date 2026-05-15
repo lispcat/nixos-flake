@@ -1,0 +1,27 @@
+services:
+  vpn:
+    image: qmcgaw/gluetun
+    container_name: vpn-socks-proxy
+    cap_add:
+      - NET_ADMIN
+    dns: 1.1.1.1
+    ports:
+      - "127.0.0.1:1080:1080"  # Expose the SOCKS5 port here
+    environment:
+      # --- VPN Settings ---
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ADDRESSES=${WG_ADDRESSES}
+      - WIREGUARD_ENDPOINT_IP=${WG_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WG_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_PRIVATE_KEY}
+    restart: unless-stopped
+
+  socks-proxy:
+    image: tarampampam/3proxy
+    container_name: socks-proxy
+    network_mode: "service:vpn"
+    depends_on:
+      - vpn
+    restart: unless-stopped
