@@ -22,9 +22,14 @@
             SessionTimeout = "24h";
 
             # TODO: move secret from hard path to sops
-            LastFM.ApiKey = builtins.readFile /etc/secrets/lastfm-api.key;
-            LastFM.Secret = builtins.readFile /etc/secrets/lastfm-secret.key;
+            # LastFM.ApiKey = builtins.readFile /etc/secrets/lastfm-api.key;
+            # LastFM.Secret = builtins.readFile /etc/secrets/lastfm-secret.key;
           };
+        };
+
+        # Environment vars
+        systemd.services.navidrome.serviceConfig = {
+          EnvironmentFile = "/etc/secrets/navidrome.env";
         };
 
         # Make music directory accessible to navidrome
