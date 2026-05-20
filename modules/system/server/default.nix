@@ -76,9 +76,7 @@
           # Ensure target directory exists and has reasonable permissions
           ${pkgs.coreutils}/bin/mkdir -p /var/lib/slskdn-vpn/config
           # Copy initial config file from Nix source into the writable location
-          # Command only runs if the destination file doesn't exist or is older,
-          # preserving the changes made by the gluetun container on subsequent restarts.
-          ${pkgs.coreutils}/bin/cp --update ${./slskdn-vpn/config/slskd.yml} /var/lib/slskdn-vpn/config/slskd.yml
+          ${pkgs.coreutils}/bin/cp -f ${./slskdn-vpn/config/slskd.yml} /var/lib/slskdn-vpn/config/slskd.yml
         '';
         serviceConfig = {
           Type             = "oneshot";
