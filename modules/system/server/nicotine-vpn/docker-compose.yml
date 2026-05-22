@@ -1,0 +1,63 @@
+services:
+  vpn:
+    image: qmcgaw/gluetun
+    container_name: vpn-gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    dns: 1.1.1.1
+    ports:
+      - "8000:8000" # gluetun HTTP control server
+      - "6081:6081" # nicotine web UI (https) (main)
+      - "6080:6080" # nicotine web UI (http)
+      # - "1080:1080" # socks proxy (currently not in use)
+      - 2234-2239:2234-2239 # ?
+    volumes:
+      - /var/lib/nicotine-vpn/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ADDRESSES=${WG_ADDRESSES}
+      - WIREGUARD_ENDPOINT_IP=${WG_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WG_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_PRIVATE_KEY}
+      - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
+      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
+      # define control API
+      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"${GLUETUN_USER}","password":"${GLUETUN_PASS}"}
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  nicotine:
+    image: ghcr.io/fletchto99/nicotine-plus-docker:latest
+    container_name: nicotine-plus
+    network_mode: "service:vpn"  # share namespace, ports on vpn service
+    depends_on:
+      vpn:
+        condition: service_healthy
+    security_opt:
+      - seccomp:unconfined  # required for GUI app to function correctly in container
+    environment:
+      - PUID=1000
+      - PGID=100  # match `$ id <username>`
+      - TZ=America/Los_Angeles
+      - LISTENING_PORT=  # unset default of 2234
+      - GLUETUN_USER=${GLUETUN_USER}  # used by nicotine+ auto-set port plugin
+      - GLUETUN_PASS=${GLUETUN_PASS}  # used by nicotine+ auto-set port plugin
+      # - PASSWORD=${NICOTINE_WEB_PASSWORD}    # web UI login
+      # - CUSTOM_USER=${NICOTINE_WEB_USERNAME} # web UI login
+    volumes:
+      - /var/lib/nicotine-vpn/config:/config  # persists nicotine config, credentials, and plugins
+      - /mnt/music/main:/main:ro
+      - /mnt/music/downloads:/data/downloads:rw
+      - /mnt/music/incomplete:/data/incomplete_downloads:rw
+    shm_size: "1gb"  # for web UI streaming stability
+    restart: unless-stopped

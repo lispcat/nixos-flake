@@ -37,7 +37,8 @@
     vpn-proxy.enable = false;
     slskd.enable = false;
     slskdn.enable = false;
-    slskdn-vpn.enable = true;
+    slskdn-vpn.enable = false;
+    nicotine-vpn.enable = true;
 
     # renoise
     renoise.enable = false;

@@ -53,7 +53,31 @@
         };
       })
 
-    ### slskdN(OT) + proxy
+    ### Nicotine + vpn
+
+    (mkFeature "nicotine-vpn" "Enable nicotine + vpn proxy" {
+      environment.etc."nicotine-vpn/docker-compose.yml".source =
+        ./nicotine-vpn/docker-compose.yml;
+
+      systemd.services.nicotine-vpn = {
+        description = "nicotine-vpn daemon + vpn";
+        after    = [ "docker.service" "network-online.target" ];
+        requires = [ "docker.service" ];
+        wants    = [ "network-online.target" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type             = "oneshot";
+          RemainAfterExit  = true;
+          WorkingDirectory = "/etc/nicotine-vpn";
+          EnvironmentFile  = "/etc/secrets/nicotine-vpn.env";
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+        };
+      };
+      networking.firewall.allowedTCPPorts = [ 6080 6081 ]; # VNC ports
+    })
+
+    ### slskdN(OT) + vpn
 
     (mkFeature "slskdn-vpn" "Enable slskdN + vpn proxy" {
       environment.etc."slskdn-vpn/docker-compose.yml".source =
