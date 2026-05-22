@@ -33,6 +33,7 @@
     vpn-proxy.enable = false;
     slskd.enable = false;
     slskdn.enable = false;
+    slskdn-vpn.enable = false;
 
     # renoise
     renoise.enable = true;
