@@ -87,6 +87,11 @@
         # docker
       ];
 
+      virtualisation.docker = {
+        enable = true;
+        storageDriver = "btrfs";
+      };
+
       ## Linux #############################################
 
       # polkit (dont really know what this does)

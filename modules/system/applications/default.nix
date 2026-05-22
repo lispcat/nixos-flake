@@ -26,6 +26,9 @@
         qemu.package = pkgs.qemu_kvm;
       };
       users.users.${user}.extraGroups = [ "libvirtd" "docker" ];
+      environment.systemPackages = with pkgs; [
+        docker-compose
+      ];
     })
   ];
 }
