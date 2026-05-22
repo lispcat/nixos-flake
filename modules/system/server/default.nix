@@ -55,6 +55,8 @@
 
     ### Nicotine + vpn
 
+    # note: if having any issues, try
+    # `sudo docker rmi nicotine-vpn-nicotine 2>/dev/null`
     (mkFeature "nicotine-vpn" "Enable nicotine + vpn proxy" {
       environment.etc."nicotine-vpn/docker-compose.yml".source =
         ./nicotine-vpn/docker-compose.yml;

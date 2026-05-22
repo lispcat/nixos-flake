@@ -48,7 +48,7 @@ services:
     environment:
       - PUID=1000
       - PGID=100  # match `$ id <username>`
-      - TZ=America/Los_Angeles
+      - TZ=America/New_York
       - LISTENING_PORT=  # unset default of 2234
       - GLUETUN_USER=${GLUETUN_USER}  # used by nicotine+ auto-set port plugin
       - GLUETUN_PASS=${GLUETUN_PASS}  # used by nicotine+ auto-set port plugin

@@ -31,6 +31,7 @@
     cmake
     gnumake
     # findutils
+    xauth # needed for x11 forwarding?
 
     ### Applications ###
 
