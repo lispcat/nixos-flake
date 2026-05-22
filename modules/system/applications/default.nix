@@ -25,10 +25,7 @@
         enable = true;
         qemu.package = pkgs.qemu_kvm;
       };
-      users.users.${user}.extraGroups = [ "libvirtd" "docker" ];
-      environment.systemPackages = with pkgs; [
-        docker-compose
-      ];
+      users.users.${user}.extraGroups = [ "libvirtd"  ];
     })
   ];
 }

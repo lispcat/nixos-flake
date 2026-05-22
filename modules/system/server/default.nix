@@ -58,6 +58,8 @@
     (mkFeature "nicotine-vpn" "Enable nicotine + vpn proxy" {
       environment.etc."nicotine-vpn/docker-compose.yml".source =
         ./nicotine-vpn/docker-compose.yml;
+      environment.etc."nicotine-vpn/Dockerfile".source =
+        ./nicotine-vpn/Dockerfile;
 
       systemd.services.nicotine-vpn = {
         description = "nicotine-vpn daemon + vpn";

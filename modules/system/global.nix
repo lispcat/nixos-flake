@@ -10,7 +10,7 @@
         users.${user} = {
           isNormalUser = true;
           description = "${user}";
-          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" "input" "pipewire" "realtime" ];
+          extraGroups = [ "wheel" "networkmanager" "audio" "wireshark" "input" "pipewire" "realtime" "docker" ];
         };
       };
 
@@ -79,18 +79,13 @@
       };
       xdg.mime.enable = true;
 
-      # virtualisation.docker = {
-      #   enable = true;
-      # };
-      # environment.systemPackages = with pkgs; [
-      #   docker-compose
-      #   # docker
-      # ];
-
       virtualisation.docker = {
         enable = true;
-        storageDriver = "btrfs";
       };
+      environment.systemPackages = with pkgs; [
+        docker-compose
+      ];
+      # added group to user above
 
       ## Linux #############################################
 

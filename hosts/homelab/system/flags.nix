@@ -9,7 +9,7 @@
     global.enable = true;
 
     # applications
-    virtualization.enable = false;
+    virtualization.enable = true;
     flatpak.enable = false;
     # flatpak.enable = true;
 

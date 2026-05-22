@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 
   nicotine:
-    image: ghcr.io/fletchto99/nicotine-plus-docker:latest
+    build: .
     container_name: nicotine-plus
     network_mode: "service:vpn"  # share namespace, ports on vpn service
     depends_on:
