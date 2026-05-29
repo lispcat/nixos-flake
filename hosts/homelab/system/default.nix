@@ -20,6 +20,25 @@
   # Auto-login
   services.getty.autologinUser = "rin";
 
+  # NFS server
+
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /mnt/audio 100.106.187.9(ro,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+    '';
+    # Pin auxiliary ports for clean firewall rules
+    lockdPort = 4001;
+    mountdPort = 4002;
+    statdPort  = 4000;
+  };
+  # Restrict NFS to Tailscale interface only
+  networking.firewall.extraCommands = ''
+    iptables -A INPUT -i tailscale0 -p tcp --dport 2049 -j ACCEPT
+    iptables -A INPUT -i tailscale0 -p udp --dport 2049 -j ACCEPT
+  '';
+
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

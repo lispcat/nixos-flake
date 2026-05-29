@@ -36,6 +36,51 @@
     };
   };
 
+  ## NFS mount
+
+  fileSystems."/home/${user}/mnt/Homelab-ro" = {
+    device = "homelab:/mnt/audio";  # or use Tailscale IP directly
+    fsType = "nfs";
+    options = [
+      # mount read-only
+      "ro"
+
+      # use NFSv4.2 - works over a single TCP port (2049), no portmapper needed
+      "vers=4.2"
+
+      # don't hang forever if the server is unreachable - fail after retries
+      "soft"
+
+      # timeout per retry attempt in 0.1s units (30 = 3s)
+      "timeo=30"
+
+      # number of retries before giving up
+      "retrans=3"
+
+      # read buffer size in bytes - larger = fewer round trips, better for streaming
+      "rsize=131072"
+
+      # don't update access timestamps on reads - reduces unnecessary writes over the network
+      "noatime"
+
+      # network filesystem - wait for network to be up before attempting mount
+      "_netdev"
+
+      # lazy mount - only mount on first access, not at boot
+      "x-systemd.automount"
+
+      # don't attempt mount until tailscale is running
+      "x-systemd.requires=tailscaled.service"
+      "x-systemd.after=tailscaled.service"
+
+      # give up mounting after this long
+      "x-systemd.mount-timeout=30s"
+
+      # unmount automatically after 10 minutes of inactivity
+      "x-systemd.idle-timeout=600"
+    ];
+  };
+
   # TODO: move elsewhere: sshfs homelab music mount
 
   # fileSystems."/home/${user}/Homelab" = {
@@ -43,7 +88,7 @@
   #   fsType = "sshfs";
   #   options = [
   #     # read-only
-  #     # "ro"
+  #     "ro"
 
   #     # path to ssh priv key (ensure pubkey in host's authorized_keys)
   #     "identityfile=/home/sui/.ssh/homelab_sshfs"
