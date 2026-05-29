@@ -25,20 +25,20 @@
   # programs.mtr.enable = true;
 
   # TODO: move elsewhere (also exists in laptop host default config)
-  programs.proxychains = {
-    enable = true;
-    proxyDNS = true;
-    chain.type = "strict";
-    proxies = {
-      # We'll give our proxy a logical name, "localvpn".
-      localvpn = {
-        enable = true;
-        type = "socks5";
-        host = "127.0.0.1";
-        port = 1080;
-      };
-    };
-  };
+  # programs.proxychains = {
+  #   enable = true;
+  #   proxyDNS = true;
+  #   chain.type = "strict";
+  #   proxies = {
+  #     # We'll give our proxy a logical name, "localvpn".
+  #     localvpn = {
+  #       enable = true;
+  #       type = "socks5";
+  #       host = "127.0.0.1";
+  #       port = 1080;
+  #     };
+  #   };
+  # };
 
   # # Don't touch!
   # system.stateVersion = "25.05"; # Did you read the comment?

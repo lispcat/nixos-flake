@@ -55,6 +55,12 @@
         networkmanager-openvpn
       ];
 
+      programs.ssh.extraConfig = ''
+        Host homelab
+          ForwardX11 yes
+          ForwardX11Trusted yes
+      '';
+
       ## Audio #############################################
 
       services.pipewire = {
