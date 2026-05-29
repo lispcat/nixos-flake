@@ -6,8 +6,8 @@
     ### Navidrome ###
 
     (let
-      musicHome = "/mnt/music";
-      musicPath = "/mnt/music/main";
+      musicHome = "/mnt/audio/shared";
+      musicPath = "/mnt/audio/shared/music";
     in
       mkFeature "navidrome" "Enable navidrome server" {
         services.navidrome = {

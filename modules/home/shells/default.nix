@@ -14,7 +14,7 @@
         };
 
         sessionVariables = {
-          PATH = "$PATH:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/opt/bin:$HOME/Scripts";
+          PATH = "$PATH:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/opt/bin:$HOME/Scripts:$HOME/Bin";
 
           # CC = "gcc";
           LC_COLLATE = "C";

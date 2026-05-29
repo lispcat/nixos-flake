@@ -11,7 +11,7 @@ services:
       - "8000:8000" # gluetun HTTP control server
       - "6081:6081" # nicotine web UI (https) (main)
       - "6080:6080" # nicotine web UI (http)
-      # - "1080:1080" # socks proxy (currently not in use)
+      - "1080:1080" # socks proxy (see below)
       - 2234-2239:2234-2239 # ?
     volumes:
       - /var/lib/nicotine-vpn/gluetun:/gluetun
@@ -36,6 +36,15 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  socks-proxy:
+    image: tarampampam/3proxy
+    container_name: socks-proxy
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
+    restart: unless-stopped
+
   nicotine:
     build: .
     container_name: nicotine-plus
@@ -56,8 +65,8 @@ services:
       # - CUSTOM_USER=${NICOTINE_WEB_USERNAME} # web UI login
     volumes:
       - /var/lib/nicotine-vpn/config:/config  # persists nicotine config, credentials, and plugins
-      - /mnt/music/main:/main:ro
-      - /mnt/music/downloads:/data/downloads:rw
-      - /mnt/music/incomplete:/data/incomplete_downloads:rw
+      - /mnt/audio/shared:/shared:ro
+      - /mnt/audio/downloads:/data/downloads:rw
+      - /mnt/audio/incomplete_downloads:/data/incomplete_downloads:rw
     shm_size: "1gb"  # for web UI streaming stability
     restart: unless-stopped
