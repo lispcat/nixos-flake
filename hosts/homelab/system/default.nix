@@ -25,7 +25,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/audio 100.106.187.9(ro,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+      /mnt/audio 100.71.163.113(ro,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
     # Pin auxiliary ports for clean firewall rules
     lockdPort = 4001;
