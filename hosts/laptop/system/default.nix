@@ -38,34 +38,37 @@
 
   # TODO: move elsewhere: sshfs homelab music mount
 
-  fileSystems."/home/${user}/Homelab" = {
-    device = "rin@homelab:/mnt/music";
-    fsType = "sshfs";
-    options = [
-      # path to ssh priv key (ensure pubkey in host's authorized_keys)
-      "identityfile=/home/sui/.ssh/homelab_sshfs"
+  # fileSystems."/home/${user}/Homelab" = {
+  #   device = "rin@homelab:/mnt/music";
+  #   fsType = "sshfs";
+  #   options = [
+  #     # read-only
+  #     # "ro"
 
-      # network fs, wait for network connection before mounting
-      "_netdev"
+  #     # path to ssh priv key (ensure pubkey in host's authorized_keys)
+  #     "identityfile=/home/sui/.ssh/homelab_sshfs"
 
-      # non-root can access mount
-      "allow_other"
+  #     # network fs, wait for network connection before mounting
+  #     "_netdev"
 
-      # lazy mounting
-      "x-systemd.automount"
+  #     # non-root can access mount
+  #     "allow_other"
 
-      # tailscale service dependency
-      "x-systemd.requires=tailscaled.service"
-      "x-systemd.after=tailscaled.service"
+  #     # lazy mounting
+  #     "x-systemd.automount"
 
-      # prevent hanging
-      "x-systemd.mount-timeout=30s"
+  #     # tailscale service dependency
+  #     "x-systemd.requires=tailscaled.service"
+  #     "x-systemd.after=tailscaled.service"
 
-      # automatically reconnect if lose connection
-      "reconnect"
+  #     # prevent hanging
+  #     "x-systemd.mount-timeout=30s"
 
-      # start checking for reconnect after x seconds
-      "ServerAliveInterval=15"
-    ];
-  };
+  #     # automatically reconnect if lose connection
+  #     "reconnect"
+
+  #     # start checking for reconnect after x seconds
+  #     "ServerAliveInterval=15"
+  #   ];
+  # };
 }

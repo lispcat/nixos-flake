@@ -136,10 +136,17 @@ in {
     clojure
     babashka
     leiningen
-    python3
     essentia-extractor
     restic
     stow
+
+    # python
+
+    (python313.withPackages (ps: [
+      ps.prompt-toolkit
+    ]))
+
+
 
     ## Cyber
 

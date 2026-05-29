@@ -49,5 +49,10 @@
     python314Packages.beets
     # python314Packages.beets-copyartifacts
     nicotine-plus
+
+    ### Scripts ###
+    (python313.withPackages (ps: [
+      ps.prompt-toolkit
+    ]))
   ];
 }
