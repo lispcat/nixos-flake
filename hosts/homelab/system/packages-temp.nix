@@ -43,13 +43,25 @@
 
     xdg-utils # for xdg-mime
 
+    ### Code ###
+
+    cargo
+
     ### Music ###
 
     sshfs
     picard
     chromaprint
-    pkgs-stable.python314Packages.beets
-    python314Packages.beets-filetote
+    ## beets custom
+    (pkgs-stable.python314Packages.beets.override {
+      pluginOverrides = {
+        filetote = {
+          enable = true;
+          propagatedBuildInputs = [ python314Packages.beets-filetote ];
+        };
+      };
+    })
+
     nicotine-plus
     kid3
 
