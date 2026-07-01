@@ -14,6 +14,7 @@
     emacs
     fzf
     fd
+    tmux
     trash-cli
     neovim
     alacritty
@@ -47,9 +48,10 @@
     sshfs
     picard
     chromaprint
-    python314Packages.beets
-    # python314Packages.beets-copyartifacts
+    pkgs-stable.python314Packages.beets
+    python314Packages.beets-filetote
     nicotine-plus
+    kid3
 
     ### Scripts ###
     (python313.withPackages (ps: [

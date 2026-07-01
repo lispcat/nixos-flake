@@ -58,6 +58,7 @@
           ts = "trash";
           b = "cd ..";
           p = "cd -";
+          mv = "mv -i"; # safer
 
           iping = "ping gnu.org";
           recursive-find = "grep -rnw . -e";

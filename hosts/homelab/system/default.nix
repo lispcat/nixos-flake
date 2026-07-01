@@ -8,24 +8,24 @@
     ./packages-temp.nix
   ];
 
-  ## Host-specific configs
+  #### Host-specific configs ####
 
-  # Bootloader
+  ## Bootloader
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
     blacklistedKernelModules = [ "uvcvideo" ]; # disables webcam
   };
 
-  # Auto-login
+  ## Auto-login
   services.getty.autologinUser = "rin";
 
-  # NFS server
-
+  ## NFS server
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/audio 100.71.163.113(ro,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+      /mnt/audio/shared 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100,fsid=1)
+      /mnt/audio/staging 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
     # Pin auxiliary ports for clean firewall rules
     lockdPort = 4001;
@@ -38,6 +38,50 @@
     iptables -A INPUT -i tailscale0 -p udp --dport 2049 -j ACCEPT
   '';
 
+  ## HDD mount
+  fileSystems = {
+    "/mnt/hdd" = {
+      device = "/dev/disk/by-label/MusicDrive";
+      fsType = "ext4";
+      options = [
+        "defaults"
+        "nofail"          # don't block boot if drive is absent
+        "noatime"         # don't update access timestamps - good for HDDs
+        "x-systemd.automount"  # mount on first access, not at boot
+      ];
+    };
+  };
+
+  ## MergerFS mount over /mnt/audio/internal and /mnt/hdd
+  environment.systemPackages = [
+    pkgs.mergerfs  # needed or else will fail
+  ];
+  fileSystems = {
+    # 2. mergerfs union over internal + HDD
+    "/mnt/audio/shared" = {
+      device = "/mnt/hdd/audio/shared:/mnt/audio/internal";
+      fsType = "fuse.mergerfs";
+      options = [
+        "defaults"
+        "allow_other"         # lets other users/services (navidrome) access it
+        "use_ino"             # use real inode numbers - important for beets
+        "cache.files=off"     # safer for NFS/network-style access patterns
+        "dropcacheonclose=true"
+        "category.create=ff"  # NEW files always go to HDD (first found with space)
+        "moveonenospc=true"   # if one branch fills up, move to another
+        "minfreespace=5G"     # don't fill a branch below 5 GB
+      ];
+      depends = [ "/mnt/hdd" "/mnt/audio/internal" ];
+    };
+  };
+
+  ## ensure directories existence
+  systemd.tmpfiles.rules = [
+    "d /mnt/audio/internal 0770 rin users -"
+    "d /mnt/audio/shared   0770 rin users -"
+    "d /mnt/audio/staging  0770 rin users -"
+    "d /mnt/hdd            0755 root root -"
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

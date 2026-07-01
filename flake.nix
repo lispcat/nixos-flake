@@ -5,7 +5,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
     # Declarative user environment.
     home-manager.url = "github:nix-community/home-manager";
@@ -40,7 +40,7 @@
     let
       system = "x86_64-linux";
       pkgs-branch = "nixos-unstable";
-      pkgs-stable-branch = "nixos-25.11";
+      pkgs-stable-branch = "nixos-26.05";
 
       unfree-p = import ./etc/unfree-p.nix nixpkgs;
       broken-p = import ./etc/broken-p.nix nixpkgs;
