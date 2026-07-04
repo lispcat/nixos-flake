@@ -159,6 +159,8 @@ in {
     beets
     # picard
     # chromaprint
+    kid3
+    spek
 
     sshfs
     feishin

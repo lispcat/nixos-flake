@@ -43,6 +43,7 @@
         xkb-switch
         screenkey
         xdotool
+        xkblayout-state # for reaper layout script
       ];
     })
 
