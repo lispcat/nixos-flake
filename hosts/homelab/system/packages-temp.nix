@@ -15,6 +15,7 @@
     fzf
     fd
     tmux
+    unzip
     trash-cli
     neovim
     alacritty
@@ -61,9 +62,11 @@
         };
       };
     })
-
+    spek
     nicotine-plus
     kid3
+    losslessaudiochecker
+    flac
 
     ### Scripts ###
     (python313.withPackages (ps: [

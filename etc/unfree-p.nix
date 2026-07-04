@@ -11,6 +11,7 @@ let
     "bitwig-studio"
     "bitwig-studio6"
     "bitwig-studio-unwrapped"
+    "losslessaudiochecker"
 
     # games
     "steam"
