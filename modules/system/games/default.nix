@@ -14,6 +14,9 @@
         dedicatedServer.openFirewall = true;
         extest.enable = true;
         localNetworkGameTransfers.openFirewall = false;
+        extraCompatPackages = [
+          pkgs.proton-ge-bin
+        ];
       };
 
 

@@ -4,6 +4,8 @@ let
     "vital"
     "spotify"
     "renoise"
+    "renoise-custom"
+    "rns_354_linux_x86_64.tar.gz"
     "reaper"
     "vcv-rack"
     "rave-generator-2"
