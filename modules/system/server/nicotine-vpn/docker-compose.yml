@@ -13,6 +13,7 @@ services:
       - "6080:6080" # nicotine web UI (http)
       - "1080:1080" # socks proxy (see below)
       - 2234-2239:2234-2239 # ?
+      - "8080:8080" # qbittorrent webui
     volumes:
       - /var/lib/nicotine-vpn/gluetun:/gluetun
     environment:
@@ -70,3 +71,37 @@ services:
       - /mnt/audio/incomplete_downloads:/data/incomplete_downloads:rw
     shm_size: "1gb"  # for web UI streaming stability
     restart: unless-stopped
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/New_York
+      - WEBUI_PORT=8080
+    volumes:
+      - /var/lib/qbittorrent-vpn/config:/config
+      - /home/rin/Torrents/downloads:/downloads
+    restart: unless-stopped
+
+  qbittorrent-port-sync:
+    image: mjmeli/qbittorrent-port-forward-gluetun-server
+    container_name: qbittorrent-port-sync
+    restart: unless-stopped
+    depends_on:
+      vpn:
+        condition: service_healthy
+    environment:
+      - QBT_USERNAME=admin
+      - QBT_PASSWORD=${QBT_WEBUI_PASSWORD}
+      - QBT_ADDR=http://vpn:8080
+      - GTN_ADDR=http://vpn:8000
+      - GTN_USERNAME=${GLUETUN_USER}
+      - GTN_PASSWORD=${GLUETUN_PASS}
+
+    # TODO! add more things here
