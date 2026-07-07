@@ -13,7 +13,6 @@ services:
       - "6080:6080" # nicotine web UI (http)
       - "1080:1080" # socks proxy (see below)
       - 2234-2239:2234-2239 # ?
-      - "8080:8080" # qbittorrent webui
     volumes:
       - /var/lib/nicotine-vpn/gluetun:/gluetun
     environment:
@@ -37,14 +36,48 @@ services:
       start_period: 10s
     restart: unless-stopped
 
-  socks-proxy:
-    image: tarampampam/3proxy
-    container_name: socks-proxy
-    network_mode: "service:vpn"
-    depends_on:
-      vpn:
-        condition: service_healthy
+  vpn2:
+    image: qmcgaw/gluetun
+    container_name: vpn-gluetun-2
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    dns: 1.1.1.1
+    ports:
+      - "8001:8000" # gluetun HTTP control server
+      - "8080:8080" # qbittorrent webui
+    # volumes:
+      # - /var/lib/nicotine-vpn/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ADDRESSES=${WG_2_ADDRESSES}
+      - WIREGUARD_ENDPOINT_IP=${WG_2_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WG_2_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_2_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_2_PRIVATE_KEY}
+      - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
+      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
+      # define control API
+      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"${GLUETUN_2_USER}","password":"${GLUETUN_2_PASS}"}
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     restart: unless-stopped
+
+  # socks-proxy:
+  #   image: tarampampam/3proxy
+  #   container_name: socks-proxy
+  #   network_mode: "service:vpn"
+  #   depends_on:
+  #     vpn:
+  #       condition: service_healthy
+  #   restart: unless-stopped
 
   nicotine:
     build: .
@@ -75,7 +108,7 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    network_mode: "service:vpn"
+    network_mode: "service:vpn2"
     depends_on:
       vpn:
         condition: service_healthy
@@ -101,7 +134,7 @@ services:
       - QBT_PASSWORD=${QBT_WEBUI_PASSWORD}
       - QBT_ADDR=http://vpn:8080
       - GTN_ADDR=http://vpn:8000
-      - GTN_USERNAME=${GLUETUN_USER}
-      - GTN_PASSWORD=${GLUETUN_PASS}
+      - GTN_USERNAME=${GLUETUN_2_USER}
+      - GTN_PASSWORD=${GLUETUN_2_PASS}
 
     # TODO! add more things here
