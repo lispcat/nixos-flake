@@ -25,7 +25,7 @@
     enable = true;
     exports = ''
       /mnt/audio/shared 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100,fsid=1)
-      /mnt/audio/staging 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+      /mnt/audio/downloads 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
     # Pin auxiliary ports for clean firewall rules
     lockdPort = 4001;
