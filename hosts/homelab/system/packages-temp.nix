@@ -1,5 +1,8 @@
 { inputs, pkgs, pkgs-stable, ... }:
 
+let
+  beets-filetote-custom = pkgs-stable.callPackage ./packages/beets-filetote.nix {};
+in
 {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -58,7 +61,7 @@
       pluginOverrides = {
         filetote = {
           enable = true;
-          propagatedBuildInputs = [ python314Packages.beets-filetote ];
+          propagatedBuildInputs = [ beets-filetote-custom ];
         };
       };
     })
