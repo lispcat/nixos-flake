@@ -1,7 +1,8 @@
 { inputs, pkgs, pkgs-stable, ... }:
 
 let
-  beets-filetote-custom = pkgs-stable.callPackage ./packages/beets-filetote.nix {};
+  beets-filetote-custom =
+    pkgs-stable.python314Packages.callPackage ./packages/beets-filetote.nix {};
 in
 {
   # List packages installed in system profile. To search, run:
