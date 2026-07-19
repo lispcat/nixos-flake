@@ -53,7 +53,7 @@
         };
       })
 
-    ### Nicotine + vpn
+    ### Nicotine + vpn ###
 
     # note: if having any issues, try
     # `sudo docker rmi nicotine-vpn-nicotine 2>/dev/null`
@@ -64,7 +64,7 @@
         ./nicotine-vpn/Dockerfile;
 
       systemd.services.nicotine-vpn = {
-        description = "nicotine-vpn daemon + vpn";
+        description = "nicotine daemon + vpn";
         after    = [ "docker.service" "network-online.target" ];
         requires = [ "docker.service" ];
         wants    = [ "network-online.target" ];
@@ -79,6 +79,32 @@
         };
       };
       networking.firewall.allowedTCPPorts = [ 6080 6081 ]; # VNC ports
+    })
+
+    ### Minecraft server + vpn ###
+
+    (mkFeature "minecraft-vpn" "Enable minecraft server + vpn proxy" {
+      environment.etc."minecraft-vpn/docker-compose.yml".source =
+        ./minecraft-vpn/docker-compose.yml;
+      # environment.etc."minecraft-vpn/Dockerfile".source =
+      #   ./minecraft-vpn/Dockerfile;
+
+      systemd.services.minecraft-vpn = {
+        description = "minecraft server + vpn";
+        after    = [ "docker.service" "network-online.target" ];
+        requires = [ "docker.service" ];
+        wants    = [ "network-online.target" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type             = "oneshot";
+          RemainAfterExit  = true;
+          WorkingDirectory = "/etc/minecraft-vpn";
+          EnvironmentFile  = "/etc/secrets/minecraft-vpn.env";
+          ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
+          ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+        };
+      };
+      networking.firewall.allowedTCPPorts = [ 25565 ]; # mc port
     })
 
     ### slskdN(OT) + vpn

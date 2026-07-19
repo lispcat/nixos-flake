@@ -83,25 +83,40 @@
     "d /mnt/hdd            0755 root root -"
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
+  ### Minecraft Server ###
 
-  # TODO: move elsewhere (also exists in laptop host default config)
-  # programs.proxychains = {
-  #   enable = true;
-  #   proxyDNS = true;
-  #   chain.type = "strict";
-  #   proxies = {
-  #     # We'll give our proxy a logical name, "localvpn".
-  #     localvpn = {
-  #       enable = true;
-  #       type = "socks5";
-  #       host = "127.0.0.1";
-  #       port = 1080;
-  #     };
-  #   };
-  # };
+  services.minecraft-server = {
+    enable = true;
+    eula = true;
+    package = pkgs.paperServers.paper;
+    # Manually handle server.properties, whitelist, ops, bans, etc.
+    # Editable in /var/lib/minecraft-server/server.properties
+    declarative = false;
+    jvmOpts = "-Xms4096M -Xmx7168M -XX:+UseG1GC -XX:+ParallelRefProcEnabled";
+  };
+
+  # port for mc
+  networking.firewall.allowedTCPPorts = [ 25565 ];
+
+  # limit resources
+  systemd.services.minecraft-server.serviceConfig = {
+    MemoryMax = "8G";
+    MemoryHigh = "7G";
+    CPUQuota = "350%";
+    CPUWeight = 100;
+    IOWeight = 50;
+  };
+
+  # for RCON
+  # ```
+  # # in /var/lib/minecraft-server/server.properties
+  # enable-rcon=true
+  # rcon.port=25575
+  # rcon.password=<your password>
+  # ```
+
+
+
 
   # # Don't touch!
   # system.stateVersion = "25.05"; # Did you read the comment?

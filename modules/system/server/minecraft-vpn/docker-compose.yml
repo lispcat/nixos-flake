@@ -1,0 +1,72 @@
+services:
+  vpn3:
+    image: qmcgaw/gluetun
+    container_name: vpn-gluetun-mc
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    dns: 1.1.1.1
+    ports:
+      - "8002:8000"     # gluetun control server
+      - "25565:25565"   # minecraft, forwarded through this netns
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ADDRESSES=${WG_3_ADDRESSES}
+      - WIREGUARD_ENDPOINT_IP=${WG_3_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${WG_3_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_3_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_3_PRIVATE_KEY}
+      - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
+      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
+      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"${GLUETUN_3_USER}","password":"${GLUETUN_3_PASS}"}
+    volumes:
+      - /var/lib/minecraft-vpn/gluetun:/gluetun
+    healthcheck:
+      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft
+    network_mode: "service:vpn3"
+    depends_on:
+      vpn3:
+        condition: service_healthy
+    environment:
+      - EULA=TRUE
+      - TYPE=PAPER
+      - MEMORY=7G
+      - ONLINE_MODE=TRUE
+      - ENFORCE_WHITELIST=TRUE
+      - ENABLE_RCON=TRUE
+      - RCON_PORT=25575
+      - RCON_PASSWORD_FILE=/run/secrets/mc_rcon_password
+    volumes:
+      - /var/lib/minecraft-vpn/data:/data
+    secrets:
+      - mc_rcon_password
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID     # itzg's entrypoint needs these to drop from root to UID 1000 at startup
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 8g
+    cpus: 3.5
+    pids_limit: 512
+    restart: unless-stopped
+
+secrets:
+  mc_rcon_password:
+    file: /etc/secrets/mc-rcon-password

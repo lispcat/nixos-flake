@@ -70,14 +70,14 @@ services:
       start_period: 10s
     restart: unless-stopped
 
-  # socks-proxy:
-  #   image: tarampampam/3proxy
-  #   container_name: socks-proxy
-  #   network_mode: "service:vpn"
-  #   depends_on:
-  #     vpn:
-  #       condition: service_healthy
-  #   restart: unless-stopped
+  socks-proxy:
+    image: tarampampam/3proxy
+    container_name: socks-proxy
+    network_mode: "service:vpn"
+    depends_on:
+      vpn:
+        condition: service_healthy
+    restart: unless-stopped
 
   nicotine:
     build: .

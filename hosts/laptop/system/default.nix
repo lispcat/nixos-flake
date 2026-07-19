@@ -67,12 +67,70 @@ in
 
   ## NFS mount
 
-  fileSystems."/mnt/homelab-rw-shared" = {
+  fileSystems."/mnt/homelab-ro-shared" = {
     device = "homelab:/mnt/audio/shared";  # or use Tailscale IP directly
     fsType = "nfs";
     options = [
       "ro" # mount read-only
-      # "rw"
+
+      "vers=4.2" # use NFSv4.2 - works over a single TCP port (2049), no portmapper needed
+      "soft" # don't hang forever if the server is unreachable - fail after retries
+      "timeo=30" # timeout per retry attempt in 0.1s units (30 = 3s)
+      "retrans=3" # number of retries before giving up
+      "rsize=131072" # read buffer size in bytes - larger = fewer round trips, better for streaming
+      "noatime" # don't update access timestamps on reads - reduces unnecessary writes over the network
+      "_netdev" # network filesystem - wait for network to be up before attempting mount
+      "x-systemd.automount" # lazy mount - only mount on first access, not at boot
+      "fsc" # opt into cachefilesd
+
+      # don't attempt mount until tailscale is running
+      "x-systemd.requires=tailscaled.service"
+      "x-systemd.after=tailscaled.service"
+
+      # give up mounting after this long
+      "x-systemd.mount-timeout=10s"
+      "retry=0"
+
+      # unmount automatically after 10 minutes of inactivity
+      "x-systemd.idle-timeout=600"
+    ];
+  };
+
+  fileSystems."/mnt/homelab-ro-downloads" = {
+    device = "homelab:/mnt/audio/downloads";  # or use Tailscale IP directly
+    fsType = "nfs";
+    options = [
+      "ro" # mount read-only
+
+      "vers=4.2" # use NFSv4.2 - works over a single TCP port (2049), no portmapper needed
+      "soft" # don't hang forever if the server is unreachable - fail after retries
+      "timeo=30" # timeout per retry attempt in 0.1s units (30 = 3s)
+      "retrans=3" # number of retries before giving up
+      "rsize=131072" # read buffer size in bytes - larger = fewer round trips, better for streaming
+      "noatime" # don't update access timestamps on reads - reduces unnecessary writes over the network
+      "_netdev" # network filesystem - wait for network to be up before attempting mount
+      "x-systemd.automount" # lazy mount - only mount on first access, not at boot
+      "fsc" # opt into cachefilesd
+
+      # don't attempt mount until tailscale is running
+      "x-systemd.requires=tailscaled.service"
+      "x-systemd.after=tailscaled.service"
+
+      # give up mounting after this long
+      "x-systemd.mount-timeout=10s"
+      "retry=0"
+
+      # unmount automatically after 10 minutes of inactivity
+      "x-systemd.idle-timeout=600"
+    ];
+  };
+
+  fileSystems."/mnt/homelab-rw-shared" = {
+    device = "homelab:/mnt/audio/shared";  # or use Tailscale IP directly
+    fsType = "nfs";
+    options = [
+      "rw" # mount read-write
+
       "vers=4.2" # use NFSv4.2 - works over a single TCP port (2049), no portmapper needed
       "soft" # don't hang forever if the server is unreachable - fail after retries
       "timeo=30" # timeout per retry attempt in 0.1s units (30 = 3s)
@@ -100,8 +158,8 @@ in
     device = "homelab:/mnt/audio/downloads";  # or use Tailscale IP directly
     fsType = "nfs";
     options = [
-      "ro" # mount read-only
-      # "rw"
+      "rw" # mount read-write
+
       "vers=4.2" # use NFSv4.2 - works over a single TCP port (2049), no portmapper needed
       "soft" # don't hang forever if the server is unreachable - fail after retries
       "timeo=30" # timeout per retry attempt in 0.1s units (30 = 3s)

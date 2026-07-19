@@ -72,5 +72,10 @@
     (python313.withPackages (ps: [
       ps.prompt-toolkit
     ]))
+
+    ### MC ###
+
+    rcon-cli
+
   ];
 }

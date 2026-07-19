@@ -4,6 +4,17 @@
   imports = [
     (mkFeature "games" "Enables steam and some games" {
 
+      ## general ##
+
+      environment.systemPackages = with pkgs; [
+        osu-lazer-bin
+        (lutris.override {
+          extraLibraries =  pkgs: [
+            # List library dependencies here
+          ];
+        })
+      ];
+
       ## Steam #################################################
 
       programs.steam = {
@@ -65,9 +76,6 @@
         executable = "${pkgs.osu-lazer-bin}/bin/osu!";
         profile = "/etc/firejail/osu-lazer.profile";
       };
-      environment.systemPackages = with pkgs; [
-        osu-lazer-bin
-      ];
     })
   ];
 }
