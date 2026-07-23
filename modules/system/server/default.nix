@@ -98,13 +98,28 @@
         serviceConfig = {
           Type             = "oneshot";
           RemainAfterExit  = true;
-          WorkingDirectory = "/etc/minecraft-vpn";
+          WorkingDirectory = "/var/lib/minecraft-vpn";
           EnvironmentFile  = "/etc/secrets/minecraft-vpn.env";
           ExecStart = "${pkgs.docker-compose}/bin/docker-compose up -d --remove-orphans";
           ExecStop  = "${pkgs.docker-compose}/bin/docker-compose down";
+          Restart    = "on-failure";
+          RestartSec = "10s";
+
+          # hardening the compose process (hopefully wont break anything)
+          NoNewPrivileges = true;
+          CapabilityBoundingSet = "";
+          ProtectHome = true;
+          ProtectSystem = "strict";
+          ReadWritePaths = [ "/var/lib/minecraft-vpn" ];
+          PrivateTmp = true;
+          ProtectKernelTunables = true;
+          ProtectKernelModules = true;
+          ProtectControlGroups = true;
+          RestrictSUIDSGID = true;
+          RestrictNamespaces = true;
         };
       };
-      networking.firewall.allowedTCPPorts = [ 25565 ]; # mc port
+      # networking.firewall.allowedTCPPorts = [ 25565 ]; # no need anymore
     })
 
     ### slskdN(OT) + vpn

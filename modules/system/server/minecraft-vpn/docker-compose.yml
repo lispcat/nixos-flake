@@ -1,57 +1,48 @@
-services:
-  vpn3:
-    image: qmcgaw/gluetun
-    container_name: vpn-gluetun-mc
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - NET_ADMIN
-    dns: 1.1.1.1
-    ports:
-      - "8002:8000"     # gluetun control server
-      - "25565:25565"   # minecraft, forwarded through this netns
-    environment:
-      - VPN_SERVICE_PROVIDER=custom
-      - VPN_TYPE=wireguard
-      - WIREGUARD_ADDRESSES=${WG_3_ADDRESSES}
-      - WIREGUARD_ENDPOINT_IP=${WG_3_ENDPOINT_IP}
-      - WIREGUARD_ENDPOINT_PORT=${WG_3_ENDPOINT_PORT}
-      - WIREGUARD_PUBLIC_KEY=${WG_3_PUBLIC_KEY}
-      - WIREGUARD_PRIVATE_KEY=${WG_3_PRIVATE_KEY}
-      - VPN_PORT_FORWARDING=on
-      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
-      - VPN_PORT_FORWARDING_STATUS_FILE=/gluetun/forwarded_port
-      - HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"${GLUETUN_3_USER}","password":"${GLUETUN_3_PASS}"}
-    volumes:
-      - /var/lib/minecraft-vpn/gluetun:/gluetun
-    healthcheck:
-      test: ["CMD", "/gluetun-entrypoint", "healthcheck"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    restart: unless-stopped
+networks:
+  playit-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/29
 
-  minecraft:
-    image: itzg/minecraft-server:latest
-    container_name: minecraft
-    network_mode: "service:vpn3"
-    depends_on:
-      vpn3:
-        condition: service_healthy
+services:
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:stable
+    container_name: playit-agent
+    restart: unless-stopped
+    networks:
+      playit-net:
+        ipv4_address: 172.28.0.2
     environment:
-      - EULA=TRUE
-      - TYPE=PAPER
-      - MEMORY=7G
-      - ONLINE_MODE=TRUE
-      - ENFORCE_WHITELIST=TRUE
-      - ENABLE_RCON=TRUE
-      - RCON_PORT=25575
-      - RCON_PASSWORD_FILE=/run/secrets/mc_rcon_password
-    volumes:
-      - /var/lib/minecraft-vpn/data:/data
+      - SECRET_KEY_FILE=/run/secrets/playit_secret.key
     secrets:
-      - mc_rcon_password
+      - playit_secret.key
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  mc:
+    image: itzg/minecraft-server:stable
+    container_name: minecraft
+    tty: true
+    stdin_open: true
+    networks:
+      playit-net:
+        ipv4_address: 172.28.0.3
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      MEMORY: "6144M" # 75% of mem_limit
+      USE_MEOWICE_FLAGS: "true"
+      ONLINE_MODE: "TRUE"
+      ENABLE_WHITELIST: "true"
+      ENFORCE_WHITELIST: "true"
+      ENABLE_RCON: "true"
+      RCON_PORT: "25575"
+      RCON_PASSWORD_FILE: "/run/secrets/mc_rcon_pass.key"
+    volumes:
+      - ./data:/data
+    secrets:
+      - mc_rcon_pass.key
     tmpfs:
       - /tmp
     cap_drop:
@@ -59,14 +50,45 @@ services:
     cap_add:
       - CHOWN
       - SETUID
-      - SETGID     # itzg's entrypoint needs these to drop from root to UID 1000 at startup
+      - SETGID
     security_opt:
       - no-new-privileges:true
+    read_only: true  # remove if plugins cause perm denied errors
     mem_limit: 8g
     cpus: 3.5
     pids_limit: 512
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  backups:
+    image: itzg/mc-backup:stable
+    container_name: minecraft-backup
+    networks:
+      playit-net:
+        ipv4_address: 172.28.0.4
+    environment:
+      RCON_HOST: "172.28.0.3"
+      RCON_PASSWORD_FILE: "/run/secrets/mc_rcon_pass.key"
+      BACKUP_INTERVAL: "6h"
+      PRUNE_BACKUPS_DAYS: "7"
+    secrets:
+      - mc_rcon_pass.key
+    volumes:
+      - ./data:/data:ro
+      - ./backups:/backups
+    depends_on:
+      mc:
+        condition: service_healthy
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
     restart: unless-stopped
 
 secrets:
-  mc_rcon_password:
-    file: /etc/secrets/mc-rcon-password
+  playit_secret.key:
+    file: /etc/secrets/playit-secret.key
+  mc_rcon_pass.key:
+    file: /etc/secrets/mc-rcon-pass.key

@@ -88,7 +88,7 @@
   services.minecraft-server = {
     enable = true;
     eula = true;
-    package = pkgs.paperServers.paper;
+    package = pkgs.papermcServers.papermc;
     # Manually handle server.properties, whitelist, ops, bans, etc.
     # Editable in /var/lib/minecraft-server/server.properties
     declarative = false;

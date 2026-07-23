@@ -39,6 +39,7 @@
     slskdn.enable = false;
     slskdn-vpn.enable = false;
     nicotine-vpn.enable = true;
+    minecraft-vpn.enable = true;
 
     # renoise
     renoise.enable = false;
