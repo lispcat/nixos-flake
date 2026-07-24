@@ -84,10 +84,23 @@
     ### Minecraft server + vpn ###
 
     (mkFeature "minecraft-vpn" "Enable minecraft server + vpn proxy" {
-      environment.etc."minecraft-vpn/docker-compose.yml".source =
-        ./minecraft-vpn/docker-compose.yml;
-      # environment.etc."minecraft-vpn/Dockerfile".source =
-      #   ./minecraft-vpn/Dockerfile;
+      # custom user
+      users.groups.mcserver = {
+        gid = 4440;
+      };
+
+      users.users.mcserver = {
+        isSystemUser = true;
+        group = "mcserver";
+        uid = 4440;
+        description = "Minecraft docker stack";
+        home = "/var/empty";
+        createHome = false;
+      };
+
+      systemd.tmpfiles.rules = [
+        "L+ /var/lib/minecraft-vpn/docker-compose.yml - - - - ${./minecraft-vpn/docker-compose.yml}"
+      ];
 
       systemd.services.minecraft-vpn = {
         description = "minecraft server + vpn";

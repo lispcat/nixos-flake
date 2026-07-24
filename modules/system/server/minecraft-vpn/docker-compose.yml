@@ -7,24 +7,26 @@ networks:
 
 services:
   playit:
-    image: ghcr.io/playit-cloud/playit-agent:stable
+    image: ghcr.io/playit-cloud/playit-agent:latest
     container_name: playit-agent
     restart: unless-stopped
     networks:
       playit-net:
         ipv4_address: 172.28.0.2
     environment:
-      - SECRET_KEY_FILE=/run/secrets/playit_secret.key
-    secrets:
-      - playit_secret.key
+      SECRET_KEY: "${PLAYIT_SECRET_KEY}"
+    # secrets:
+    #   - playit-secret.key
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
+    # user: "4440:4440"
 
   mc:
     image: itzg/minecraft-server:stable
     container_name: minecraft
     tty: true
     stdin_open: true
+    user: "4440:4440"
     networks:
       playit-net:
         ipv4_address: 172.28.0.3
@@ -38,13 +40,14 @@ services:
       ENFORCE_WHITELIST: "true"
       ENABLE_RCON: "true"
       RCON_PORT: "25575"
-      RCON_PASSWORD_FILE: "/run/secrets/mc_rcon_pass.key"
+      RCON_PASSWORD_FILE: "/run/secrets/mc-rcon-pass.key"
     volumes:
       - ./data:/data
+      # - /etc/secrets/mc-rcon-pass.key:/run/secrets/mc-rcon-pass.key:ro
     secrets:
-      - mc_rcon_pass.key
+      - mc-rcon-pass.key
     tmpfs:
-      - /tmp
+      - /tmp:exec,mode=1777,size=1g
     cap_drop:
       - ALL
     cap_add:
@@ -72,23 +75,25 @@ services:
         ipv4_address: 172.28.0.4
     environment:
       RCON_HOST: "172.28.0.3"
-      RCON_PASSWORD_FILE: "/run/secrets/mc_rcon_pass.key"
+      RCON_PASSWORD_FILE: "/run/secrets/mc-rcon-pass.key"
       BACKUP_INTERVAL: "6h"
       PRUNE_BACKUPS_DAYS: "7"
     secrets:
-      - mc_rcon_pass.key
+      - mc-rcon-pass.key
     volumes:
       - ./data:/data:ro
       - ./backups:/backups
+      # - /etc/secrets/mc-rcon-pass.key:/run/secrets/mc-rcon-pass.key:ro
     depends_on:
       mc:
         condition: service_healthy
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
+    user: "4440:4440"
     restart: unless-stopped
 
 secrets:
-  playit_secret.key:
-    file: /etc/secrets/playit-secret.key
-  mc_rcon_pass.key:
+  # playit-secret.key:
+  #   file: /etc/secrets/playit-secret.key
+  mc-rcon-pass.key:
     file: /etc/secrets/mc-rcon-pass.key
