@@ -32,8 +32,11 @@
         };
 
         theme = {
-          package = pkgs.colloid-gtk-theme;
-          name = "Colloid-Dark";
+          name = "Adwaita-dark";
+          package = pkgs.gnome-themes-extra;
+
+          # package = pkgs.colloid-gtk-theme;
+          # name = "Colloid-Dark";
 
           # name = "Catppuccin-Mocha-Compact-Mauve-Dark";
           # package = pkgs.catppuccin-gtk.override {
@@ -42,7 +45,7 @@
           #   variant = "mocha";
           #   # tweaks = [ "rimless" ];
           # };
-          
+
         };
 
         gtk2.extraConfig = ''
@@ -50,7 +53,7 @@
         '';
 
         gtk3 = {
-          extraConfig.gtk-application-prefer-dark-theme = true;
+          extraConfig.gtk-application-prefer-dark-theme = "1";
           extraConfig.gtk-im-module = "fcitx";    # fcitx
 
           ## GTK headerbar ## --------------------

@@ -76,7 +76,17 @@ in {
         winetricks
 
         ## Daws
-        reaper
+
+        # reaper
+        (writeShellScriptBin "reaper" ''
+          exec ${steam-run-free}/bin/steam-run ${reaper}/bin/reaper "$@"
+        '')
+
+        # steam-run-free
+        (writeShellScriptBin "steam-run-free" ''
+          exec ${steam-run-free}/bin/steam-run "$@"
+        '')
+
         audacity
         # bitwig-studio6 # proprietary!!!
         bitwig-custom

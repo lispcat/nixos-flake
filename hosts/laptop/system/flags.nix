@@ -19,7 +19,7 @@
     laptop-power.enable = true;
 
     # misc
-    nix-ld.enable = false;
+    nix-ld.enable = true;
 
     # networking
     mullvad.enable = false;
@@ -35,7 +35,7 @@
     slskdn.enable = false;
     slskdn-vpn.enable = false;
     nicotine-vpn.enable = false;
-    minecraft-vpn.enable = true;
+    minecraft-vpn.enable = false;
 
     # renoise
     renoise.enable = true;

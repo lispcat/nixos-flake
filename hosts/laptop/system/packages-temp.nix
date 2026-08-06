@@ -271,6 +271,10 @@ in {
     fira
     roboto
 
+    # reaper theme: ros solaris blue (added in ~/.local/share/fonts)
+    # montserrat
+    # metric
+
     # (pkgs-stable.iosevka.override {
     #   set = "Custom";
     #   privateBuildPlan = ''
