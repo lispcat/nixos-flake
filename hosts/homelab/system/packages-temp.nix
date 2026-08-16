@@ -58,14 +58,18 @@ in
     picard
     chromaprint
     ## beets custom
-    (pkgs-stable.python314Packages.beets.override {
-      pluginOverrides = {
-        filetote = {
-          enable = true;
-          propagatedBuildInputs = [ beets-filetote-custom ];
-        };
-      };
-    })
+    # (pkgs-stable.python314Packages.beets.override {
+    #   pluginOverrides = {
+    #     filetote = {
+    #       enable = true;
+    #       propagatedBuildInputs = [
+    #         beets-filetote-custom
+    #       ];
+    #     };
+    #   };
+    # })
+    pkgs-stable.python314Packages.beets
+
     spek
     nicotine-plus
     kid3

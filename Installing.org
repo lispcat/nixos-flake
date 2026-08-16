@@ -1,0 +1,88 @@
+#+title: NixOS Installation Notes
+
+-- Initial --
+
+#+begin_src sh :tangle
+
+  sudo -s
+
+#+end_src
+
+-- Networking --
+
+#+begin_src sh :tangle
+
+  # Partitioning:
+
+  ## (EFI) create and format boot partition
+  parted /dev/sda -- mklabel gpt
+
+  parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
+  parted /dev/sda -- set 1 boot on
+  parted /dev/sda -- mkpart primary 512MiB 100%
+
+  mkfs.fat -F 32 -n boot /dev/sda1
+
+  ## (BIOS) create and format boot partition
+  parted /dev/sda -- mklabel msdos
+
+  parted /dev/sda -- mkpart primary 1MiB 512MiB
+  parted /dev/sda -- set 1 boot on
+  parted /dev/sda -- mkpart primary 512MiB 100%
+
+  mkfs.ext4 -L boot /dev/sda1
+
+  # create and open luks partition
+  cryptsetup luksFormat /dev/sda2
+  cryptsetup luksOpen /dev/sda2 crypted
+
+  # format btrfs and subvolumes
+  mkfs.btrfs -L root /dev/mapper/crypted
+  mount -t btrfs /dev/mapper/crypted /mnt
+
+  btrfs subvolume create /mnt/@root
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@nix
+  btrfs subvolume create /mnt/@swap
+
+  # if doing tmpfs:
+  # btrfs subvolume create /mnt/@persist
+  # btrfs subvolume create /mnt/@log
+
+  # take an empty *readonly* snapshot of the root subvolume, which can be rollback to on every boot. (should be able to be deleted in the future if i do)
+  btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
+
+  # unmount to mount subvolumes
+  umount /mnt
+
+  # mount everything with proper options
+  mount -o compress=zstd,noatime,subvol=@root /dev/mapper/crypted /mnt
+
+  mkdir -p /mnt/{home,nix,.swapvol}
+  mount -o compress=zstd,noatime,subvol=@home    /dev/mapper/crypted /mnt/home
+  mount -o compress=zstd,noatime,subvol=@nix     /dev/mapper/crypted /mnt/nix
+  mount -o                       subvol=@swap    /dev/mapper/crypted /mnt/.swapvol
+
+  # if doing tmpfs
+  # mkdir -p /mnt{persist,var/log}
+  # mount -o compress=zstd,noatime,subvol=@persist /dev/mapper/crypted /mnt/persist
+  # mount -o compress=zstd,noatime,subvol=@log     /dev/mapper/crypted /mnt/var/log
+
+  # mount boot partition (only do if using standalone boot part)
+  mkdir -p /mnt/boot
+  mount /dev/sda1 /mnt/boot 
+
+  # create swapfile
+  btrfs filesystem mkswapfile --size 4G /mnt/.swapvol/swapfile  # adjust size appropriately
+
+  # generate config
+  nixos-generate-config --root /mnt
+
+  # tweak /mnt/etc/nixos/* as needed
+  nix-shell -p neovim
+
+#+end_src
+
+* To troubleshoot:
+- cryptsetup luksOpen /dev/sda2 crypted
+- mount everything

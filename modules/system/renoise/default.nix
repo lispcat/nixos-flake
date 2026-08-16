@@ -82,6 +82,10 @@ in {
           exec ${steam-run-free}/bin/steam-run ${reaper}/bin/reaper "$@"
         '')
 
+        (writeShellScriptBin "reaper-unwrapped" ''
+          exec ${reaper}/bin/reaper "$@"
+        '')
+
         # steam-run-free
         (writeShellScriptBin "steam-run-free" ''
           exec ${steam-run-free}/bin/steam-run "$@"

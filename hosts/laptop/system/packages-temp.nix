@@ -8,14 +8,16 @@ let
       epkgs.vterm
       epkgs.jinx
     ]);
-  tex-custom = (pkgs.texlive.combine {
-    inherit (pkgs.texlive) scheme-basic
+  tex-custom = (pkgs.texliveSmall.withPackages (
+    ps: with ps; [
+      scheme-basic
       dvisvgm dvipng # for preview and export as html
       wrapfig amsmath ulem hyperref capt-of
       preview newunicodechar cm-super fontspec
       unicode-math lualatex-math xits mathtools enumitem
-      preprint minted upquote lineno underscore;
-  });
+      preprint minted upquote lineno underscore
+    ]
+  ));
 in {
 
   environment.systemPackages = with pkgs; [
@@ -111,7 +113,8 @@ in {
     colordiff
     poppler-utils  # for pdftotext
     vorbis-tools  # for vorbiscomment
-    jmtpfs
+    # jmtpfs  # unmaintained
+    zig
     cargo
     cargo-modules
     cargo-binstall
@@ -229,7 +232,7 @@ in {
     # mono
     fira-code
     hack-font
-    jetbrains-mono
+    # jetbrains-mono
     maple-mono.truetype
     pkgs-stable.iosevka
     aporetic
