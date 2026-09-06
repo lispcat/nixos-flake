@@ -24,8 +24,9 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/audio/shared 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100,fsid=1)
+      /mnt/audio/shared    100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100,fsid=1)
       /mnt/audio/downloads 100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100)
+      /mnt/audio/unshared  100.71.163.113(rw,no_subtree_check,all_squash,anonuid=1000,anongid=100)
     '';
     # Pin auxiliary ports for clean firewall rules
     lockdPort = 4001;
@@ -59,7 +60,7 @@
   fileSystems = {
     # 2. mergerfs union over internal + HDD
     "/mnt/audio/shared" = {
-      device = "/mnt/hdd/audio/shared:/mnt/audio/internal";
+      device = "/mnt/hdd/audio/shared";
       fsType = "fuse.mergerfs";
       options = [
         "defaults"
@@ -71,16 +72,31 @@
         "moveonenospc=true"   # if one branch fills up, move to another
         "minfreespace=5G"     # don't fill a branch below 5 GB
       ];
-      depends = [ "/mnt/hdd" "/mnt/audio/internal" ];
+      depends = [ "/mnt/hdd" ];
+    };
+    "/mnt/audio/unshared" = {
+      device = "/mnt/hdd/audio/unshared";
+      fsType = "fuse.mergerfs";
+      options = [
+        "defaults"
+        "allow_other"         # lets other users/services (navidrome) access it
+        "use_ino"             # use real inode numbers - important for beets
+        "cache.files=off"     # safer for NFS/network-style access patterns
+        "dropcacheonclose=true"
+        "category.create=ff"  # NEW files always go to HDD (first found with space)
+        "moveonenospc=true"   # if one branch fills up, move to another
+        "minfreespace=5G"     # don't fill a branch below 5 GB
+      ];
+      depends = [ "/mnt/hdd" ];
     };
   };
 
   ## ensure directories existence
   systemd.tmpfiles.rules = [
-    "d /mnt/audio/internal 0770 rin users -"
-    "d /mnt/audio/shared   0770 rin users -"
-    "d /mnt/audio/staging  0770 rin users -"
-    "d /mnt/hdd            0755 root root -"
+    "d /mnt/audio/shared    0770 rin users -"
+    "d /mnt/audio/unshared  0770 rin users -"
+    "d /mnt/audio/downloads 0770 rin users -"
+    "d /mnt/hdd             0755 root root -"
   ];
 
   ### Minecraft Server ###

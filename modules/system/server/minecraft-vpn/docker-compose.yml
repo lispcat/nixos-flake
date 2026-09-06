@@ -31,23 +31,52 @@ services:
       playit-net:
         ipv4_address: 172.28.0.3
     environment:
+      # EXTRA_ARGS: "--safeMode" # TEMP, to fix paper->neoforge switch
+      # LEVEL: "world-test"
+      LEVEL: "world"
+      VERSION: "26.1.2"
       EULA: "TRUE"
-      TYPE: "PAPER"
-      MEMORY: "6144M" # 75% of mem_limit
+      # TYPE: "PAPER"
+      TYPE: "NEOFORGE"
+      NEOFORGE_VERSION: "26.1.2.87"
+      MEMORY: "3072M"
       USE_MEOWICE_FLAGS: "true"
-      ONLINE_MODE: "TRUE"
-      ENABLE_WHITELIST: "true"
-      ENFORCE_WHITELIST: "true"
+      ONLINE_MODE: "FALSE"
+      ENABLE_WHITELIST: "false"
+      ENFORCE_WHITELIST: "false"
       ENABLE_RCON: "true"
       RCON_PORT: "25575"
       RCON_PASSWORD_FILE: "/run/secrets/mc-rcon-pass.key"
+      SPAWN_PROTECTION: "0"
+      ENFORCE_SECURE_PROFILE: "false"
+      MODRINTH_DOWNLOAD_DEPENDENCIES: none
+      MODRINTH_PROJECTS: |
+        no-chat-restrictions
+        skinrestorer
+        chest-locker
+        key
+        patpat?
+        forever-pets
+        unlimited-villager-trades
+      # ly-graves
+      # tpa
+      # grieflogger
+      # yamlconfig
+      # knot
+      # gun-core
+      # modern-guns
+      # connector
+      # call-of-the-king
+      # giantess-toki (might break, needs client-side)
+      # touhou-little-maid (might break, needs client-side)
     volumes:
       - ./data:/data
+      - ./mods:/mods
       # - /etc/secrets/mc-rcon-pass.key:/run/secrets/mc-rcon-pass.key:ro
     secrets:
       - mc-rcon-pass.key
     tmpfs:
-      - /tmp:exec,mode=1777,size=1g
+      - /tmp:exec,mode=1777,size=512m
     cap_drop:
       - ALL
     cap_add:
@@ -57,8 +86,9 @@ services:
     security_opt:
       - no-new-privileges:true
     read_only: true  # remove if plugins cause perm denied errors
-    mem_limit: 8g
-    cpus: 3.5
+    mem_limit: 4g
+    # cpus: 3.5
+    cpuset: "0"
     pids_limit: 512
     logging:
       driver: json-file

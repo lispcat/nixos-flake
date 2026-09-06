@@ -1,8 +1,8 @@
 { inputs, pkgs, pkgs-stable, ... }:
 
 let
-  beets-filetote-custom =
-    pkgs-stable.python314Packages.callPackage ./packages/beets-filetote.nix {};
+  # beets-filetote-custom =
+  #   pkgs-stable.python314Packages.callPackage ./packages/beets-filetote.nix {};
 in
 {
   # List packages installed in system profile. To search, run:
@@ -77,13 +77,23 @@ in
     flac
 
     ### Scripts ###
-    (python313.withPackages (ps: [
+
+    # DISABLED: forces build of python, freezes system
+
+    (python314.withPackages (ps: [
       ps.prompt-toolkit
     ]))
+    # python314
 
     ### MC ###
 
     rcon-cli
 
   ];
+
+  # prevent system freezing during package builds (im looking at you python)
+  nix.settings.max-jobs = 2; # limit concurrent derivation builds
+  nix.settings.cores = 2;    # cores per build job
+
+  services.earlyoom.enable = true; # kills freezing builds before full freeze
 }

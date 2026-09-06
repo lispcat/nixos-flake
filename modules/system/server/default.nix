@@ -6,16 +6,23 @@
     ### Navidrome ###
 
     (let
-      musicHome = "/mnt/audio/shared";
-      musicPath = "/mnt/audio/shared/music";
+      sharedHome = "/mnt/audio/shared";
+      sharedPath = "/mnt/audio/shared/music";
+      unsharedHome = "/mnt/audio/unshared";
+      unsharedPath = "/mnt/audio/unshared/music";
     in
       mkFeature "navidrome" "Enable navidrome server" {
+        systemd.services.navidrome = {
+          after = [ "tailscaled.service" "network-online.target" "systemd-resolved.service" ];
+          wants = [ "tailscaled.service" "network-online.target" ];
+        };
+
         services.navidrome = {
           enable = true;
           openFirewall = false;
 
           settings = {
-            MusicFolder = musicPath;
+            MusicFolder = sharedPath;
             Address = "homelab";      # homelab tailscale local ip
             Port = 4533;
             BaseUrl = "";
@@ -30,7 +37,7 @@
           # env vars
           EnvironmentFile = "/etc/secrets/navidrome.env";
           # for extra security
-          ReadOnlyPaths = [ musicPath ];
+          ReadOnlyPaths = [ sharedPath unsharedPath ];
         };
         users.users.navidrome.extraGroups = [ "users" ];
 
@@ -39,8 +46,8 @@
         systemd.services.music-permission-fix = {
           description = "Fix music library group permissions";
           script = ''
-            chown -R ${user}:users ${musicHome}
-            chmod -R u=rwX,g=rwX,o= ${musicHome}
+            chown -R ${user}:users  ${sharedHome} ${unsharedHome}
+            chmod -R u=rwX,g=rwX,o= ${sharedHome} ${unsharedHome}
           '';
           serviceConfig.Type = "oneshot";
         };
