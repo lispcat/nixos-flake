@@ -315,4 +315,10 @@ in {
     #   '';
     # })
   ];
+
+  # prevent system freezing during package builds (im looking at you python)
+  nix.settings.max-jobs = 2;  # limit concurrent derivations
+  nix.settings.cores = 6;     # cores per build job
+
+  services.earlyoom.enable = true; # kills freezing builds before full freeze
 }

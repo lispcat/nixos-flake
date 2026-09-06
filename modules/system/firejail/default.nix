@@ -36,49 +36,49 @@
 
       ### Wine #################################################
 
-      environment.etc = {
-        "firejail/wine-plugins.profile".text = ''
-          blacklist ~/.ssh
-          blacklist ~/.gnupg
-          blacklist ~/.password-store
-          blacklist ~/.mozilla
-          blacklist ~/.librewolf
-          blacklist ~/.config/chromium
-          blacklist ~/.config/BraveSoftware
-          blacklist ~/.zsh_history
-          blacklist ~/.bash_history
-          blacklist ~/NixOS
-          blacklist ~/Notes
-          blacklist ~/Pictures
-          blacklist ~/Private
-          blacklist ~/Projects
-          blacklist ~/School
-          blacklist ~/Src
-          blacklist ~/Videos
-          blacklist ~/opt
-          blacklist ~/slsk-vpn
-          blacklist ~/wireguard
-          blacklist ~/tmp
+      # environment.etc = {
+      #   "firejail/wine-plugins.profile".text = ''
+      #     blacklist ~/.ssh
+      #     blacklist ~/.gnupg
+      #     blacklist ~/.password-store
+      #     blacklist ~/.mozilla
+      #     blacklist ~/.librewolf
+      #     blacklist ~/.config/chromium
+      #     blacklist ~/.config/BraveSoftware
+      #     blacklist ~/.zsh_history
+      #     blacklist ~/.bash_history
+      #     blacklist ~/NixOS
+      #     blacklist ~/Notes
+      #     blacklist ~/Pictures
+      #     blacklist ~/Private
+      #     blacklist ~/Projects
+      #     blacklist ~/School
+      #     blacklist ~/Src
+      #     blacklist ~/Videos
+      #     blacklist ~/opt
+      #     blacklist ~/slsk-vpn
+      #     blacklist ~/wireguard
+      #     blacklist ~/tmp
 
-          blacklist /boot
-          blacklist /sys/firmware
-          blacklist /sys/kernel/debug
+      #     blacklist /boot
+      #     blacklist /sys/firmware
+      #     blacklist /sys/kernel/debug
 
-          caps.drop all
-          # nosuid
-          nonewprivs
-          noroot
-          nodvd
-          notv
-          novideo
+      #     # caps.drop all
+      #     # nosuid
+      #     # nonewprivs
+      #     # noroot
+      #     # nodvd
+      #     # notv
+      #     # novideo
 
-          private-tmp
-        '';
-      };
-      programs.firejail.wrappedBinaries.wine = {
-        executable = "${pkgs.wineWow64Packages.stable}/bin/wine";
-        profile = "/etc/firejail/wine-plugins.profile";
-      };
+      #     # private-tmp
+      #   '';
+      # };
+      # programs.firejail.wrappedBinaries.wine = {
+      #   executable = "${pkgs.wineWow64Packages.stable}/bin/wine";
+      #   profile = "/etc/firejail/wine-plugins.profile";
+      # };
 
     })
   ];
