@@ -72,7 +72,7 @@ in {
         ## yabridge setup
         yabridge
         yabridgectl
-        wineWow64Packages.stable
+        wineWow64Packages.yabridge
         winetricks
 
         ## Daws
