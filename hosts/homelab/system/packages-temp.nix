@@ -82,6 +82,7 @@ in
 
     (python314.withPackages (ps: [
       ps.prompt-toolkit
+      ps.yt-dlp
     ]))
     # python314
 
