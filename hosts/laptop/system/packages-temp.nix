@@ -2,7 +2,7 @@
 
 let
   # base-emacs = pkgs.emacs30-pgtk;
-  base-emacs = pkgs.emacs30-gtk3;
+  base-emacs = pkgs.emacs-gtk;
   emacs-with-pkgs =
     (pkgs.emacsPackagesFor base-emacs).emacsWithPackages (epkgs: [
       epkgs.vterm
@@ -179,7 +179,7 @@ in {
     pkgs-stable.calibre
     ungoogled-chromium
     kdePackages.kdeconnect-kde
-    libreoffice-fresh hunspell hunspellDicts.en-us-large
+    libreoffice-stable hunspell hunspellDicts.en-us-large
     obs-studio
     vesktop
     # nheko

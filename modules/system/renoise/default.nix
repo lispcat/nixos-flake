@@ -56,7 +56,7 @@ in {
 
         ## Synths
         bespokesynth
-        pkgs-stable.surge-XT
+        pkgs-stable.surge-xt
         pkgs-stable.zynaddsubfx
         geonkick
         # pkgs-stable.vcv-rack

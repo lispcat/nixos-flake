@@ -24,8 +24,10 @@
         };
         mpdris2 = {
           enable = true;
-          multimediaKeys = true;
-          notifications = true;
+          settings.Bling = {
+            mmkeys = true;
+            notify = true;
+          };
         };
         mpdscribble = {
           enable = false;
