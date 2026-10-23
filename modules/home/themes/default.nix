@@ -9,7 +9,7 @@
       # https://github.com/raexera/yuki/blob/main/home/raexera/config/qt.nix
       qt = {
         enable = true;
-        platformTheme = "qtct";
+        platformTheme.name = "qtct";
         style.name = "kvantum";
       };
 
@@ -77,6 +77,7 @@
         };
 
         gtk4 = {
+          theme = null;
           extraConfig.gtk-application-prefer-dark-theme = true;
           extraConfig.gtk-im-module = "fcitx";    # fcitx
 
