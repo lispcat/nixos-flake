@@ -28,7 +28,8 @@
         (haskellPackages.ghcWithPackages (ps: [
           ps.xmonad ps.xmonad-contrib
         ]))
-        trayer
+        # trayer # (depricated, removed)
+        stalonetray
         xmobar
         xmessage
         scrot

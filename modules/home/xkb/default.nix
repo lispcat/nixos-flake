@@ -1,17 +1,17 @@
-{ pkgs, mkFeature, ... }:
+{ pkgs, pkgs-stable, mkFeature, ... }:
 
 {
   imports = [
     (mkFeature "fcitx" "Enables fcitx5" {
       i18n.inputMethod = {
         type = "fcitx5";
-        # enable = true;
+        enable = true;
         fcitx5 = {
-          waylandFrontend = true;
+          # waylandFrontend = true;
           addons = with pkgs; [
-            fcitx5-mozc
+            pkgs-stable.fcitx5-mozc
             fcitx5-fluent
-            fcitx5-configtool
+            qt6Packages.fcitx5-configtool
             fcitx5-gtk
           ];
         };

@@ -2,7 +2,7 @@
 
 let
   din-is-noise   = pkgs.callPackage ./din-is-noise { withJack = true; };
-  renoise-custom = pkgs.callPackage ./renoise { inherit inputs; };
+  renoise-custom = pkgs-stable.callPackage ./renoise { inherit inputs; };
   bitwig-custom  = pkgs.callPackage ./bitwig { inherit inputs; };
   lsp-plugins    = pkgs.callPackage ./lsp-plugins {};
   rave-gen-2     = pkgs.callPackage ./rave-generator-2 {};
@@ -91,7 +91,7 @@ in {
           exec ${steam-run-free}/bin/steam-run "$@"
         '')
 
-        audacity
+        pkgs-stable.audacity
         # bitwig-studio6 # proprietary!!!
         bitwig-custom
         sunvox

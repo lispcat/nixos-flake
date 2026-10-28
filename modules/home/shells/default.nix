@@ -43,6 +43,9 @@
           # QT_IM_MODULES = "wayland;fcitx;ibus";
           # GLFW_IM_MODULE = "fcitx";
 
+          GTK_IM_MODULE = "fcitx";
+          QT_IM_MODULE = "fcitx";
+
           #### --- Xorg --- ####
           MOZ_USE_XINPUT2 = 1;
         };
