@@ -8,8 +8,8 @@
     (let
       sharedHome = "/mnt/audio/shared";
       sharedPath = "/mnt/audio/shared/music";
-      unsharedHome = "/mnt/audio/unshared";
-      unsharedPath = "/mnt/audio/unshared/music";
+      unsharedHome = "/mnt/audio/private";
+      unsharedPath = "/mnt/audio/private/music";
     in
       mkFeature "navidrome" "Enable navidrome server" {
         systemd.services.navidrome = {
@@ -17,16 +17,25 @@
           wants = [ "tailscaled.service" "network-online.target" ];
         };
 
+        # whitelist tailscale TCP on navidrome port
+        networking.firewall.interfaces."tailscale0".allowedTCPPorts = [ 4533 ];
+
         services.navidrome = {
           enable = true;
           openFirewall = false;
 
+          withPlugins = p: [
+            p.discord-rich-presence
+          ];
+
           settings = {
             MusicFolder = sharedPath;
-            Address = "homelab";      # homelab tailscale local ip
+            # Address = "homelab";      # homelab tailscale local ip
+            Address = "0.0.0.0";
             Port = 4533;
             BaseUrl = "";
             LogLevel = "info";
+            # Plugins.Enabled = false; # temp fix for now, pull req 578132
 
             ScanSchedule = "@every 30m";     # scan for new music
             TranscodingCacheSize = "500MB";
@@ -91,6 +100,37 @@
     ### Minecraft server + vpn ###
 
     (mkFeature "minecraft-vpn" "Enable minecraft server + vpn proxy" {
+
+      services.minecraft-server = {
+        enable = true;
+        eula = true;
+        package = pkgs.papermcServers.papermc;
+        # Manually handle server.properties, whitelist, ops, bans, etc.
+        # Editable in /var/lib/minecraft-server/server.properties
+        declarative = false;
+        jvmOpts = "-Xms4096M -Xmx7168M -XX:+UseG1GC -XX:+ParallelRefProcEnabled";
+      };
+
+      # port for mc
+      networking.firewall.allowedTCPPorts = [ 25565 ];
+
+      # limit resources
+      systemd.services.minecraft-server.serviceConfig = {
+        MemoryMax = "8G";
+        MemoryHigh = "7G";
+        CPUQuota = "350%";
+        CPUWeight = 100;
+        IOWeight = 50;
+      };
+
+      # for RCON
+      # ```
+      # # in /var/lib/minecraft-server/server.properties
+      # enable-rcon=true
+      # rcon.port=25575
+      # rcon.password=<your password>
+      # ```
+
       # custom user
       users.groups.mcserver = {
         gid = 4440;

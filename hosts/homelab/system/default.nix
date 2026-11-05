@@ -99,37 +99,7 @@
     "d /mnt/hdd             0755 root root -"
   ];
 
-  ### Minecraft Server ###
 
-  services.minecraft-server = {
-    enable = true;
-    eula = true;
-    package = pkgs.papermcServers.papermc;
-    # Manually handle server.properties, whitelist, ops, bans, etc.
-    # Editable in /var/lib/minecraft-server/server.properties
-    declarative = false;
-    jvmOpts = "-Xms4096M -Xmx7168M -XX:+UseG1GC -XX:+ParallelRefProcEnabled";
-  };
-
-  # port for mc
-  networking.firewall.allowedTCPPorts = [ 25565 ];
-
-  # limit resources
-  systemd.services.minecraft-server.serviceConfig = {
-    MemoryMax = "8G";
-    MemoryHigh = "7G";
-    CPUQuota = "350%";
-    CPUWeight = 100;
-    IOWeight = 50;
-  };
-
-  # for RCON
-  # ```
-  # # in /var/lib/minecraft-server/server.properties
-  # enable-rcon=true
-  # rcon.port=25575
-  # rcon.password=<your password>
-  # ```
 
 
 
