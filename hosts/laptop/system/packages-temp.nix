@@ -2,7 +2,7 @@
 
 let
   # base-emacs = pkgs.emacs30-pgtk;
-  base-emacs = pkgs.emacs-gtk;
+  base-emacs = pkgs-stable.emacs-gtk;
   emacs-with-pkgs =
     (pkgs.emacsPackagesFor base-emacs).emacsWithPackages (epkgs: [
       epkgs.vterm
